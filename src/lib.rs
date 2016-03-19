@@ -1,3 +1,7 @@
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+#![cfg_attr(feature="clippy", deny(clippy))] // turn warnings into errors
+
 #![cfg_attr(not(feature = "with-syntex"), feature(plugin_registrar, rustc_private))]
 
 #[cfg(not(feature = "with-syntex"))]
@@ -58,7 +62,7 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
         }
     };
 
-    if !input.starts_with("\n") {
+    if !input.starts_with('\n') {
         cx.span_err(sp, "argument must start with '\\n'");
         return DummyResult::any(sp);
     }

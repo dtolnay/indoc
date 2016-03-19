@@ -21,4 +21,4 @@ syntex = { version = "^0.30", optional = true }
 syntex_syntax = { version = "^0.30", optional = true }
 
 [dev-dependencies]
-compiletest_rs = "*"
+compiletest_rs = "^0.1"

@@ -5,6 +5,7 @@ authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT/Apache-2.0"
 description = "Indented document literals"
 repository = "https://github.com/dtolnay/indoc"
+documentation = "https://github.com/dtolnay/indoc"
 keywords = ["heredoc", "nowdoc"]
 
 [lib]

@@ -4,7 +4,9 @@ Indented Documents (indoc)
 [![Build Status](https://api.travis-ci.org/dtolnay/indoc.svg?branch=master)](https://travis-ci.org/dtolnay/indoc)
 [![Latest Version](https://img.shields.io/crates/v/indoc.svg)](https://crates.io/crates/indoc)
 
-This Rust crate provides a compiler plugin for indented string literals.
+This crate provides a Rust compiler plugin for indented string literals. The
+`indoc!()` macro takes a multiline string literal and un-indents it so the
+leftmost non-space character is in the first column.
 
 Installation
 ============
@@ -17,9 +19,6 @@ indoc = "^0.1"
 Using Indoc
 ===========
 
-The `indoc!` macro trims the widest possible rectangle of spaces from the
-beginning of lines in its argument:
-
 ```rust
 #![plugin(indoc)]
 
@@ -30,23 +29,6 @@ fn main() {
         c
            d");
     let expected = "a\n   b\nc\n   d";
-    assert_eq!(testing, expected);
-}
-```
-
-To add a trailing newline:
-
-```rust
-#![plugin(indoc)]
-
-fn main() {
-    let testing = indoc!("
-        a
-           b
-        c
-           d
-        ");
-    let expected = "a\n   b\nc\n   d\n";
     assert_eq!(testing, expected);
 }
 ```

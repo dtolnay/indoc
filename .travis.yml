@@ -5,5 +5,12 @@ language: rust
 rust:
   - nightly
 
+script:
+  - cargo build --verbose
+  - cargo test --verbose
+  - cargo build --features with-syntex --verbose
+  - cargo build --features clippy --verbose
+  - cargo build --features 'clippy with-syntex' --verbose
+
 notifications:
   email: false

@@ -2,6 +2,7 @@ Indented Documents (indoc)
 ==========================
 
 [![Build Status](https://api.travis-ci.org/dtolnay/indoc.svg?branch=master)](https://travis-ci.org/dtolnay/indoc)
+[![Latest Version](https://img.shields.io/crates/v/indoc.svg)](https://crates.io/crates/indoc)
 
 This Rust crate provides a compiler plugin for indented string literals.
 

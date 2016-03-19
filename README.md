@@ -50,6 +50,23 @@ fn main() {
 }
 ```
 
+And byte string literals:
+
+```rust
+#![plugin(indoc)]
+
+fn main() {
+    let testing = indoc!(b"
+        a
+           b
+        c
+           d
+        ");
+    let expected = b"a\n   b\nc\n   d\n";
+    assert_eq!(testing, expected);
+}
+```
+
 ## License
 
 Licensed under either of

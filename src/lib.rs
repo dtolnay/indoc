@@ -15,7 +15,8 @@ extern crate syntex;
 extern crate syntex_syntax as syntax;
 
 use syntax::codemap::Span;
-use syntax::parse::{self, token};
+use syntax::parse;
+use syntax::parse::token::{self, Lit, Literal, InternedString};
 use syntax::ast::{TokenTree, LitKind, StrStyle};
 use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
 use syntax::ext::build::AstBuilder; // trait for expr_lit
@@ -44,7 +45,7 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
     }
 
     let lit = match args[0] {
-        TokenTree::Token(_, token::Literal(lit, _name)) => lit,
+        TokenTree::Token(_, Literal(lit, _name)) => lit,
         _ => {
             cx.span_err(sp, "argument must be a single string literal");
             return DummyResult::any(sp);
@@ -52,9 +53,9 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
     };
 
     let (input, style) = match lit {
-        token::Lit::Str_(name) =>
+        Lit::Str_(name) =>
             (name.as_str(), StrStyle::Cooked),
-        token::Lit::StrRaw(name, hashes) =>
+        Lit::StrRaw(name, hashes) =>
             (name.as_str(), StrStyle::Raw(hashes)),
         _ => {
             cx.span_err(sp, "argument must be a single string literal");
@@ -75,7 +76,7 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
 
 // Compute the maximal number of spaces that can be removed from every line, and
 // remove them.
-fn unindent(input: token::InternedString) -> String {
+fn unindent(input: InternedString) -> String {
     // Document may start either on the same line as opening quote or
     // on the next line
     let ignore_first_line = input.starts_with('\n')

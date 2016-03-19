@@ -89,7 +89,7 @@ fn unindent(input: token::InternedString) -> String {
                       .min()
                       .unwrap_or(0);
 
-    let mut result = String::new();
+    let mut result = String::with_capacity(input.len());
     for (i, line) in input.lines().enumerate() {
         if i > 1 || (i == 1 && !ignore_first_line) {
             result.push_str("\n");

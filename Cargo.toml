@@ -10,3 +10,11 @@ keywords = ["heredoc", "nowdoc"]
 [lib]
 name = "indoc"
 plugin = true
+
+[features]
+default = []
+with-syntex = ["syntex", "syntex_syntax"]
+
+[dependencies]
+syntex = { version = "^0.30", optional = true }
+syntex_syntax = { version = "^0.30", optional = true }

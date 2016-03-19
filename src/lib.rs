@@ -1,24 +1,36 @@
-#![feature(plugin_registrar, rustc_private)]
+#![cfg_attr(not(feature = "with-syntex"), feature(plugin_registrar, rustc_private))]
 
-extern crate syntax;
-extern crate rustc;
+#[cfg(not(feature = "with-syntex"))]
 extern crate rustc_plugin;
+#[cfg(not(feature = "with-syntex"))]
+extern crate syntax;
+
+#[cfg(feature = "with-syntex")]
+extern crate syntex;
+#[cfg(feature = "with-syntex")]
+extern crate syntex_syntax as syntax;
 
 use syntax::codemap::Span;
 use syntax::parse::{self, token};
 use syntax::ast::{TokenTree, LitKind, StrStyle};
 use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
 use syntax::ext::build::AstBuilder; // trait for expr_str
-use rustc_plugin::Registry;
 
+#[cfg(not(feature = "with-syntex"))]
 #[plugin_registrar]
 #[doc(hidden)]
-pub fn register(reg: &mut Registry) {
+pub fn register(reg: &mut rustc_plugin::Registry) {
     reg.register_macro("indoc", expand_indoc);
 }
 
-fn expand_indoc(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
-    -> Box<MacResult + 'static>
+#[cfg(feature = "with-syntex")]
+#[doc(hidden)]
+pub fn register(reg: &mut syntex::Registry) {
+    reg.add_macro("indoc", expand_indoc);
+}
+
+fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
+    -> Box<MacResult + 'a>
 {
     if args.len() != 1 {
         cx.span_err(

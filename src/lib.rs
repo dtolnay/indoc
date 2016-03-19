@@ -18,7 +18,7 @@ use syntax::codemap::Span;
 use syntax::parse::{self, token};
 use syntax::ast::{TokenTree, LitKind, StrStyle};
 use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
-use syntax::ext::build::AstBuilder; // trait for expr_str
+use syntax::ext::build::AstBuilder; // trait for expr_lit
 
 #[cfg(not(feature = "with-syntex"))]
 #[plugin_registrar]

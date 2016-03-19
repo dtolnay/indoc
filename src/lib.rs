@@ -88,7 +88,7 @@ fn unindent(input: token::InternedString) -> String {
         if i > 0 {
             result.push_str("\n");
         }
-        if let Some(_) = count_spaces(line) {
+        if count_spaces(line).is_some() {
             result.push_str(&line[spaces..]);
         }
     }

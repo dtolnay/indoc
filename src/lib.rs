@@ -13,7 +13,7 @@ use rustc_plugin::Registry;
 
 #[plugin_registrar]
 #[doc(hidden)]
-pub fn plugin_registrar(reg: &mut Registry) {
+pub fn register(reg: &mut Registry) {
     reg.register_macro("indoc", expand_indoc);
 }
 

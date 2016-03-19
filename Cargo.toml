@@ -9,4 +9,4 @@ keywords = ["heredoc", "nowdoc"]
 
 [lib]
 name = "indoc"
-crate-type = ["dylib"]
+plugin = true

@@ -59,7 +59,7 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
     };
 
     if !input.starts_with("\n") {
-        cx.span_err(sp, "argument must start with '\n'");
+        cx.span_err(sp, "argument must start with '\\n'");
         return DummyResult::any(sp);
     }
 

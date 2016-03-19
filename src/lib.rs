@@ -76,9 +76,13 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
 // Compute the maximal number of spaces that can be removed from every line, and
 // remove them.
 fn unindent(input: token::InternedString) -> String {
+    // Document may start either on the same line as opening quote or
+    // on the next line
     let ignore_first_line = input.starts_with('\n')
                             || input.starts_with("\r\n");
 
+    // Largest number of spaces that can be removed from every
+    // non-whitespace-only line after the first
     let spaces = input.lines()
                       .skip(1)
                       .filter_map(count_spaces)
@@ -91,8 +95,11 @@ fn unindent(input: token::InternedString) -> String {
             result.push_str("\n");
         }
         if i == 0 {
+            // Do not un-indent anything on same line as opening quote
             result.push_str(line);
         } else if line.len() > spaces {
+            // Whitespace-only lines may have fewer than the number of spaces
+            // being removed
             result.push_str(&line[spaces..]);
         }
     }

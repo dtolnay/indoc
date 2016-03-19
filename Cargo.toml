@@ -3,7 +3,7 @@ name = "indoc"
 version = "0.1.0"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT/Apache-2.0"
-description = "Indented document literal"
+description = "Indented document literals"
 repository = "https://github.com/dtolnay/indoc"
 keywords = ["heredoc", "nowdoc"]
 

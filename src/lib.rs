@@ -92,7 +92,7 @@ fn unindent(input: token::InternedString) -> String {
         }
         if i == 0 {
             result.push_str(line);
-        } else if count_spaces(line).is_some() {
+        } else if line.len() > spaces {
             result.push_str(&line[spaces..]);
         }
     }

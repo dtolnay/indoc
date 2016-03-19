@@ -16,8 +16,8 @@ extern crate syntex_syntax as syntax;
 
 use syntax::codemap::Span;
 use syntax::parse;
-use syntax::parse::token::{self, Lit, Literal, InternedString};
-use syntax::ast::{TokenTree, LitKind, StrStyle};
+use syntax::parse::token::{self, Lit, Literal};
+use syntax::ast::{TokenTree, LitKind, StrStyle, Name};
 use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
 use syntax::ext::build::AstBuilder; // trait for expr_lit
 
@@ -52,31 +52,35 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
         }
     };
 
-    let (input, style) = match lit {
+    MacEager::expr(cx.expr_lit(sp, match lit {
         Lit::Str_(name) =>
-            (name.as_str(), StrStyle::Cooked),
+            LitKind::Str(
+                token::intern_and_get_ident(
+                    &parse::str_lit(&unindent(name))),
+                StrStyle::Cooked),
         Lit::StrRaw(name, hashes) =>
-            (name.as_str(), StrStyle::Raw(hashes)),
+            LitKind::Str(
+                token::intern_and_get_ident(
+                    &parse::raw_str_lit(&unindent(name))),
+                StrStyle::Raw(hashes)),
+        Lit::ByteStr(name) =>
+            LitKind::ByteStr(
+                parse::byte_str_lit(&unindent(name))),
+        Lit::ByteStrRaw(name, _hashes) =>
+            LitKind::ByteStr(
+                parse::byte_str_lit(&unindent(name))),
         _ => {
             cx.span_err(sp, "argument must be a single string literal");
             return DummyResult::any(sp);
         }
-    };
-
-    let unindented = unindent(input);
-    let parsed = match style {
-        StrStyle::Cooked => parse::str_lit(&unindented),
-        StrStyle::Raw(_) => parse::raw_str_lit(&unindented),
-    };
-    let interned = token::intern_and_get_ident(&parsed);
-    let styled = LitKind::Str(interned, style);
-
-    MacEager::expr(cx.expr_lit(sp, styled))
+    }))
 }
 
 // Compute the maximal number of spaces that can be removed from every line, and
 // remove them.
-fn unindent(input: InternedString) -> String {
+fn unindent(name: Name) -> String {
+    let input = name.as_str();
+
     // Document may start either on the same line as opening quote or
     // on the next line
     let ignore_first_line = input.starts_with('\n')

@@ -62,11 +62,6 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
         }
     };
 
-    if !input.starts_with('\n') {
-        cx.span_err(sp, "argument must start with '\\n'");
-        return DummyResult::any(sp);
-    }
-
     let unindented = unindent(input);
     let parsed = match style {
         StrStyle::Cooked => parse::str_lit(&unindented),
@@ -81,14 +76,23 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
 // Compute the maximal number of spaces that can be removed from every line, and
 // remove them.
 fn unindent(input: token::InternedString) -> String {
-    let spaces = input.lines().filter_map(count_spaces).min().unwrap_or(0);
+    let ignore_first_line = input.starts_with('\n')
+                            || input.starts_with("\r\n");
+
+    let spaces = input.lines()
+                      .skip(1)
+                      .filter_map(count_spaces)
+                      .min()
+                      .unwrap_or(0);
 
     let mut result = String::new();
-    for (i, line) in input[1..].lines().enumerate() {
-        if i > 0 {
+    for (i, line) in input.lines().enumerate() {
+        if i > 1 || (i == 1 && !ignore_first_line) {
             result.push_str("\n");
         }
-        if count_spaces(line).is_some() {
+        if i == 0 {
+            result.push_str(line);
+        } else if count_spaces(line).is_some() {
             result.push_str(&line[spaces..]);
         }
     }

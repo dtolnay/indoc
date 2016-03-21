@@ -8,8 +8,7 @@ This crate provides a Rust compiler plugin for indented string literals. The
 `indoc!()` macro takes a multiline string literal and un-indents it so the
 leftmost non-space character is in the first column.
 
-Installation
-============
+## Installation
 
 Indoc is available on [crates.io](https://crates.io/crates/indoc). Use the
 following in `Cargo.toml`:
@@ -21,8 +20,7 @@ indoc = "^0.1"
 
 Release notes are available under [GitHub releases](https://github.com/dtolnay/indoc/releases).
 
-Using Indoc
-===========
+## Using Indoc
 
 ```rust
 #![plugin(indoc)]

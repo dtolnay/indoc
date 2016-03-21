@@ -70,6 +70,28 @@ fn main() {
 }
 ```
 
+## Explanation
+
+The following rules characterize the behavior of the `indoc!()` macro:
+
+1. Count the leading spaces of each line, ignoring the first line and any lines
+   that are empty or contain spaces only.
+2. Take the minimum.
+3. If the first line is empty i.e. the string begins with a newline, remove the
+   first line.
+4. Remove the computed number of spaces from the beginning of each line.
+
+This means there are a few equivalent ways to format the same string, so choose
+one you like. All of the following result in the string `"line one\nline
+two\n"`:
+
+```
+indoc!("            /      indoc!(             /      indoc!("line one
+   line one        /         "line one        /               line two
+   line two       /           line two       /                ")
+   ")            /            ")            /
+```
+
 ## License
 
 Licensed under either of

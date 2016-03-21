@@ -11,10 +11,15 @@ leftmost non-space character is in the first column.
 Installation
 ============
 
+Indoc is available on [crates.io](https://crates.io/crates/indoc). Use the
+following in `Cargo.toml`:
+
 ```toml
 [dependencies]
 indoc = "^0.1"
 ```
+
+Release notes are available under [GitHub releases](https://github.com/dtolnay/indoc/releases).
 
 Using Indoc
 ===========

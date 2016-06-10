@@ -22,6 +22,11 @@ extern crate syntex;
 #[cfg(feature = "with-syntex")]
 extern crate syntex_syntax as syntax;
 
+#[cfg(feature = "with-syntex")]
+use std::io;
+#[cfg(feature = "with-syntex")]
+use std::path::Path;
+
 use syntax::codemap::Span;
 use syntax::parse;
 use syntax::parse::token::{self, Lit, Literal};
@@ -40,6 +45,17 @@ pub fn register(reg: &mut rustc_plugin::Registry) {
 #[doc(hidden)]
 pub fn register(reg: &mut syntex::Registry) {
     reg.add_macro("indoc", expand_indoc);
+}
+
+#[cfg(feature = "with-syntex")]
+#[doc(hidden)]
+pub fn expand<S, D>(src: S, dst: D) -> io::Result<()>
+    where S: AsRef<Path>,
+          D: AsRef<Path>,
+{
+    let mut registry = syntex::Registry::new();
+    register(&mut registry);
+    registry.expand("", src.as_ref(), dst.as_ref())
 }
 
 fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])

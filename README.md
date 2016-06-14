@@ -27,11 +27,12 @@ Release notes are available under [GitHub releases](https://github.com/dtolnay/i
 
 fn main() {
     let testing = indoc!("
-        a
-           b
-        c
-           d");
-    let expected = "a\n   b\nc\n   d";
+        def hello():
+            print('Hello, world!')
+
+        hello()
+        ");
+    let expected = "def hello():\n    print('Hello, world!')\n\nhello()\n";
     assert_eq!(testing, expected);
 }
 ```
@@ -43,12 +44,12 @@ Indoc also works with raw string literals:
 
 fn main() {
     let testing = indoc!(r#"
-        a
-           "b"
-        c
-           d
+        def hello():
+            print("Hello, world!")
+
+        hello()
         "#);
-    let expected = "a\n   \"b\"\nc\n   d\n";
+    let expected = "def hello():\n    print(\"Hello, world!\")\n\nhello()\n";
     assert_eq!(testing, expected);
 }
 ```
@@ -60,13 +61,13 @@ And byte string literals:
 
 fn main() {
     let testing = indoc!(b"
-        a
-           b
-        c
-           d
+        def hello():
+            print('Hello, world!')
+
+        hello()
         ");
-    let expected = b"a\n   b\nc\n   d\n";
-    assert_eq!(testing, expected);
+    let expected = b"def hello():\n    print('Hello, world!')\n\nhello()\n";
+    assert_eq!(testing[..], expected[..]);
 }
 ```
 

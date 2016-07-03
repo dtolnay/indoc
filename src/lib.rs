@@ -23,16 +23,15 @@ extern crate syntex;
 extern crate syntex_syntax as syntax;
 
 #[cfg(feature = "with-syntex")]
-use std::io;
-#[cfg(feature = "with-syntex")]
 use std::path::Path;
 
 use syntax::codemap::Span;
 use syntax::parse;
 use syntax::parse::token::{self, Lit, Literal};
-use syntax::ast::{TokenTree, LitKind, StrStyle, Name};
+use syntax::ast::{LitKind, StrStyle, Name};
 use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
 use syntax::ext::build::AstBuilder; // trait for expr_lit
+use syntax::tokenstream::TokenTree;
 
 #[cfg(not(feature = "with-syntex"))]
 #[plugin_registrar]
@@ -49,7 +48,7 @@ pub fn register(reg: &mut syntex::Registry) {
 
 #[cfg(feature = "with-syntex")]
 #[doc(hidden)]
-pub fn expand<S, D>(src: S, dst: D) -> io::Result<()>
+pub fn expand<S, D>(src: S, dst: D) -> Result<(), syntex::Error>
     where S: AsRef<Path>,
           D: AsRef<Path>,
 {

@@ -28,8 +28,8 @@ use std::path::Path;
 use syntax::codemap::Span;
 use syntax::parse;
 use syntax::parse::token::{self, Lit, Literal};
-use syntax::ast::{LitKind, StrStyle, Name};
-use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
+use syntax::ast::{LitKind, Name, StrStyle};
+use syntax::ext::base::{DummyResult, ExtCtxt, MacEager, MacResult};
 use syntax::ext::build::AstBuilder; // trait for expr_lit
 use syntax::tokenstream::TokenTree;
 
@@ -57,13 +57,16 @@ pub fn expand<S, D>(src: S, dst: D) -> Result<(), syntex::Error>
     registry.expand("", src.as_ref(), dst.as_ref())
 }
 
-fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
-    -> Box<MacResult + 'a>
-{
+fn expand_indoc<'a>(
+    cx: &'a mut ExtCtxt,
+    sp: Span,
+    args: &[TokenTree]
+) -> Box<MacResult + 'a> {
     if args.len() != 1 {
-        cx.span_err(
-            sp,
-            &format!("argument must be a single string literal, but got {} arguments", args.len()));
+        cx.span_err(sp,
+                    &format!("argument must be a single string literal, but \
+                              got {} arguments",
+                             args.len()));
         return DummyResult::any(sp);
     }
 
@@ -75,28 +78,31 @@ fn expand_indoc<'a>(cx: &'a mut ExtCtxt, sp: Span, args: &[TokenTree])
         }
     };
 
-    MacEager::expr(cx.expr_lit(sp, match lit {
-        Lit::Str_(name) =>
+    MacEager::expr(cx.expr_lit(sp,
+                               match lit {
+                                   Lit::Str_(name) =>
             LitKind::Str(
                 token::intern_and_get_ident(
                     &parse::str_lit(&unindent(name))),
                 StrStyle::Cooked),
-        Lit::StrRaw(name, hashes) =>
+                                   Lit::StrRaw(name, hashes) =>
             LitKind::Str(
                 token::intern_and_get_ident(
                     &parse::raw_str_lit(&unindent(name))),
                 StrStyle::Raw(hashes)),
-        Lit::ByteStr(name) =>
+                                   Lit::ByteStr(name) =>
             LitKind::ByteStr(
                 parse::byte_str_lit(&unindent(name))),
-        Lit::ByteStrRaw(name, _hashes) =>
+                                   Lit::ByteStrRaw(name, _hashes) =>
             LitKind::ByteStr(
                 parse::byte_str_lit(&unindent(name))),
-        _ => {
-            cx.span_err(sp, "argument must be a single string literal");
-            return DummyResult::any(sp);
-        }
-    }))
+                                   _ => {
+                                       cx.span_err(sp,
+                                                   "argument must be a \
+                                                    single string literal");
+                                       return DummyResult::any(sp);
+                                   }
+                               }))
 }
 
 // Compute the maximal number of spaces that can be removed from every line, and
@@ -106,16 +112,16 @@ fn unindent(name: Name) -> String {
 
     // Document may start either on the same line as opening quote or
     // on the next line
-    let ignore_first_line = input.starts_with('\n')
-                            || input.starts_with("\r\n");
+    let ignore_first_line = input.starts_with('\n') ||
+                            input.starts_with("\r\n");
 
     // Largest number of spaces that can be removed from every
     // non-whitespace-only line after the first
     let spaces = input.lines()
-                      .skip(1)
-                      .filter_map(count_spaces)
-                      .min()
-                      .unwrap_or(0);
+        .skip(1)
+        .filter_map(count_spaces)
+        .min()
+        .unwrap_or(0);
 
     let mut result = String::with_capacity(input.len());
     for (i, line) in input.lines().enumerate() {
@@ -138,7 +144,7 @@ fn unindent(name: Name) -> String {
 fn count_spaces(line: &str) -> Option<usize> {
     for (i, ch) in line.chars().enumerate() {
         if ch != ' ' {
-            return Some(i)
+            return Some(i);
         }
     }
     None

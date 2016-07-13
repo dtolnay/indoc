@@ -14,7 +14,8 @@ fn run_mode(mode: &'static str) {
     let mut config = compiletest::default_config();
     config.mode = mode.parse().unwrap();
     config.src_base = PathBuf::from(format!("tests/{}", mode));
-    config.target_rustcflags = Some("--extern indoc=target/debug/libindoc.so".to_owned());
+    config.target_rustcflags = Some("--extern indoc=target/debug/libindoc.so"
+        .to_owned());
     compiletest::run_tests(&config);
 }
 

@@ -93,6 +93,23 @@ indoc!("            /      indoc!(             /      indoc!("line one
    ")            /            ")            /
 ```
 
+## Unindent
+
+Indoc's indentation logic is available in the `unindent` crate. This may be
+useful if you are not interested in using an unstable compiler plugin.
+
+The crate exposes a single function `unindent(&str) -> String`.
+
+```rust
+extern crate unindent;
+use unindent::*;
+
+let indented = "
+        line one
+        line two";
+assert_eq!("line one\nline two", &unindent(indented));
+```
+
 ## License
 
 Licensed under either of

@@ -7,6 +7,7 @@ description = "Indented document literals"
 repository = "https://github.com/dtolnay/indoc"
 documentation = "https://github.com/dtolnay/indoc"
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
+include = ["Cargo.toml", "src/**/*.rs"]
 
 [lib]
 name = "indoc"
@@ -20,6 +21,7 @@ with-syntex = ["syntex", "syntex_syntax"]
 clippy = { version = "^0.*", optional = true }
 syntex = { version = "^0.37", optional = true }
 syntex_syntax = { version = "^0.37", optional = true }
+unindent = "0.1"
 
 [dev-dependencies]
 compiletest_rs = "^0.1"

@@ -1,0 +1,10 @@
+[package]
+name = "unindent"
+version = "0.1.0"
+authors = ["David Tolnay <dtolnay@gmail.com>"]
+license = "MIT/Apache-2.0"
+description = "Remove a column of leading whitespace from a string"
+repository = "https://github.com/dtolnay/indoc"
+documentation = "https://github.com/dtolnay/indoc"
+keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
+include = ["Cargo.toml", "src/**/*.rs"]

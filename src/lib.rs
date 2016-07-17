@@ -22,13 +22,16 @@ extern crate syntex;
 #[cfg(feature = "with-syntex")]
 extern crate syntex_syntax as syntax;
 
+extern crate unindent;
+use unindent::*;
+
 #[cfg(feature = "with-syntex")]
 use std::path::Path;
 
 use syntax::codemap::Span;
 use syntax::parse;
 use syntax::parse::token::{self, Lit, Literal};
-use syntax::ast::{LitKind, Name, StrStyle};
+use syntax::ast::{LitKind, StrStyle};
 use syntax::ext::base::{DummyResult, ExtCtxt, MacEager, MacResult};
 use syntax::ext::build::AstBuilder; // trait for expr_lit
 use syntax::tokenstream::TokenTree;
@@ -83,19 +86,19 @@ fn expand_indoc<'a>(
                                    Lit::Str_(name) =>
             LitKind::Str(
                 token::intern_and_get_ident(
-                    &parse::str_lit(&unindent(name))),
+                    &parse::str_lit(&unindent(&name.as_str()))),
                 StrStyle::Cooked),
                                    Lit::StrRaw(name, hashes) =>
             LitKind::Str(
                 token::intern_and_get_ident(
-                    &parse::raw_str_lit(&unindent(name))),
+                    &parse::raw_str_lit(&unindent(&name.as_str()))),
                 StrStyle::Raw(hashes)),
                                    Lit::ByteStr(name) =>
             LitKind::ByteStr(
-                parse::byte_str_lit(&unindent(name))),
+                parse::byte_str_lit(&unindent(&name.as_str()))),
                                    Lit::ByteStrRaw(name, _hashes) =>
             LitKind::ByteStr(
-                parse::byte_str_lit(&unindent(name))),
+                parse::byte_str_lit(&unindent(&name.as_str()))),
                                    _ => {
                                        cx.span_err(sp,
                                                    "argument must be a \
@@ -103,49 +106,4 @@ fn expand_indoc<'a>(
                                        return DummyResult::any(sp);
                                    }
                                }))
-}
-
-// Compute the maximal number of spaces that can be removed from every line, and
-// remove them.
-fn unindent(name: Name) -> String {
-    let input = name.as_str();
-
-    // Document may start either on the same line as opening quote or
-    // on the next line
-    let ignore_first_line = input.starts_with('\n') ||
-                            input.starts_with("\r\n");
-
-    // Largest number of spaces that can be removed from every
-    // non-whitespace-only line after the first
-    let spaces = input.lines()
-        .skip(1)
-        .filter_map(count_spaces)
-        .min()
-        .unwrap_or(0);
-
-    let mut result = String::with_capacity(input.len());
-    for (i, line) in input.lines().enumerate() {
-        if i > 1 || (i == 1 && !ignore_first_line) {
-            result.push_str("\n");
-        }
-        if i == 0 {
-            // Do not un-indent anything on same line as opening quote
-            result.push_str(line);
-        } else if line.len() > spaces {
-            // Whitespace-only lines may have fewer than the number of spaces
-            // being removed
-            result.push_str(&line[spaces..]);
-        }
-    }
-    result
-}
-
-// Number of leading spaces in the line, or None if the line is entirely spaces.
-fn count_spaces(line: &str) -> Option<usize> {
-    for (i, ch) in line.chars().enumerate() {
-        if ch != ' ' {
-            return Some(i);
-        }
-    }
-    None
 }

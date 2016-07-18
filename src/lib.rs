@@ -81,29 +81,27 @@ fn expand_indoc<'a>(
         }
     };
 
-    MacEager::expr(cx.expr_lit(sp,
-                               match lit {
-                                   Lit::Str_(name) =>
-            LitKind::Str(
-                token::intern_and_get_ident(
-                    &parse::str_lit(&unindent(&name.as_str()))),
-                StrStyle::Cooked),
-                                   Lit::StrRaw(name, hashes) =>
-            LitKind::Str(
-                token::intern_and_get_ident(
-                    &parse::raw_str_lit(&unindent(&name.as_str()))),
-                StrStyle::Raw(hashes)),
-                                   Lit::ByteStr(name) =>
-            LitKind::ByteStr(
-                parse::byte_str_lit(&unindent(&name.as_str()))),
-                                   Lit::ByteStrRaw(name, _hashes) =>
-            LitKind::ByteStr(
-                parse::byte_str_lit(&unindent(&name.as_str()))),
-                                   _ => {
-                                       cx.span_err(sp,
-                                                   "argument must be a \
-                                                    single string literal");
-                                       return DummyResult::any(sp);
-                                   }
-                               }))
+    let result = match lit {
+        Lit::Str_(name) => {
+            let unindented = parse::str_lit(&unindent(&name.as_str()));
+            let interned = token::intern_and_get_ident(&unindented);
+            LitKind::Str(interned, StrStyle::Cooked)
+        }
+        Lit::StrRaw(name, hashes) => {
+            let unindented = parse::raw_str_lit(&unindent(&name.as_str()));
+            let interned = token::intern_and_get_ident(&unindented);
+            LitKind::Str(interned, StrStyle::Raw(hashes))
+        }
+        Lit::ByteStr(name) |
+        Lit::ByteStrRaw(name, _) => {
+            let unindented = parse::byte_str_lit(&unindent(&name.as_str()));
+            LitKind::ByteStr(unindented)
+        }
+        _ => {
+            cx.span_err(sp, "argument must be a single string literal");
+            return DummyResult::any(sp);
+        }
+    };
+
+    MacEager::expr(cx.expr_lit(sp, result))
 }

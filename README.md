@@ -102,7 +102,7 @@ The crate exposes a single function `unindent(&str) -> String`.
 
 ```rust
 extern crate unindent;
-use unindent::*;
+use unindent::unindent;
 
 let indented = "
         line one

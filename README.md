@@ -107,7 +107,7 @@ use unindent::*;
 let indented = "
         line one
         line two";
-assert_eq!("line one\nline two", &unindent(indented));
+assert_eq!("line one\nline two", unindent(indented));
 ```
 
 ## License

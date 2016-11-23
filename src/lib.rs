@@ -30,10 +30,11 @@ use std::path::Path;
 
 use syntax::codemap::Span;
 use syntax::parse;
-use syntax::parse::token::{self, Lit, Literal};
+use syntax::parse::token::{Lit, Literal};
 use syntax::ast::{LitKind, StrStyle};
 use syntax::ext::base::{DummyResult, ExtCtxt, MacEager, MacResult};
 use syntax::ext::build::AstBuilder; // trait for expr_lit
+use syntax::symbol::Symbol;
 use syntax::tokenstream::TokenTree;
 
 #[cfg(not(feature = "with-syntex"))]
@@ -84,12 +85,12 @@ fn expand_indoc<'a>(
     let result = match lit {
         Lit::Str_(name) => {
             let unindented = parse::str_lit(&unindent(&name.as_str()));
-            let interned = token::intern_and_get_ident(&unindented);
+            let interned = Symbol::intern(&unindented);
             LitKind::Str(interned, StrStyle::Cooked)
         }
         Lit::StrRaw(name, hashes) => {
             let unindented = parse::raw_str_lit(&unindent(&name.as_str()));
-            let interned = token::intern_and_get_ident(&unindented);
+            let interned = Symbol::intern(&unindented);
             LitKind::Str(interned, StrStyle::Raw(hashes))
         }
         Lit::ByteStr(name) |

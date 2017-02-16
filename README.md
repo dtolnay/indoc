@@ -23,6 +23,7 @@ Release notes are available under [GitHub releases](https://github.com/dtolnay/i
 ## Using Indoc
 
 ```rust
+#![feature(plugin)]
 #![plugin(indoc)]
 
 fn main() {
@@ -40,6 +41,7 @@ fn main() {
 Indoc also works with raw string literals:
 
 ```rust
+#![feature(plugin)]
 #![plugin(indoc)]
 
 fn main() {
@@ -57,6 +59,7 @@ fn main() {
 And byte string literals:
 
 ```rust
+#![feature(plugin)]
 #![plugin(indoc)]
 
 fn main() {

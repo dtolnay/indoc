@@ -6,10 +6,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![feature(plugin)]
-#![plugin(indoc)]
+#[macro_use]
+extern crate indoc;
 
 fn main() {
-    indoc!(64);
-    //~^ argument must be a single string literal
+    indoc!("
+        a
+        b
+        c
+        " 64);
 }

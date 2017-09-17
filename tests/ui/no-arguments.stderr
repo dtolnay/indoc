@@ -1,0 +1,9 @@
+error: proc-macro derive panicked
+  --> $DIR/no-arguments.rs:13:5
+   |
+13 |     indoc!();
+   |     ^^^^^^^^^
+   |
+   = help: message: argument must be a single string literal, but got 0 arguments
+   = note: this error originates in a macro outside of the current crate
+

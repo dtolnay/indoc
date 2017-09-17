@@ -6,8 +6,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![feature(plugin)]
-#![plugin(indoc)]
+#[macro_use]
+extern crate indoc;
 
 fn main() {
     let indoc = indoc!(br#"
@@ -15,6 +15,6 @@ fn main() {
 
             \\b
         c"#);
-    let expected = b"\"a\"\n\n    \\b\nc";
+    let expected = b"\"a\"\n\n    \\\\b\nc";
     assert_eq!(indoc, expected);
 }

@@ -96,7 +96,10 @@ indoc!("            /      indoc!(             /      indoc!("line one
 Indoc's indentation logic is available in the `unindent` crate. This may be
 useful for processing strings that are not statically known at compile time.
 
-The crate exposes a single function `unindent(&str) -> String`.
+The crate exposes two functions:
+
+- `unindent(&str) -> String`
+- `unindent_bytes(&[u8]) -> Vec<u8>`
 
 ```rust
 extern crate unindent;

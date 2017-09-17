@@ -6,6 +6,31 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+//! ## Unindent
+//!
+//! This crate provides [`indoc`]'s indentation logic for use with strings that
+//! are not statically known at compile time. For unindenting string literals,
+//! use `indoc` instead.
+//!
+//! [`indoc`]: https://github.com/dtolnay/indoc
+//!
+//! This crate exposes two functions:
+//!
+//! - `unindent(&str) -> String`
+//! - `unindent_bytes(&[u8]) -> Vec<u8>`
+//!
+//! ```rust
+//! extern crate unindent;
+//! use unindent::unindent;
+//!
+//! fn main() {
+//!     let indented = "
+//!             line one
+//!             line two";
+//!     assert_eq!("line one\nline two", unindent(indented));
+//! }
+//! ```
+
 #![doc(html_root_url = "https://docs.rs/unindent/0.1.1")]
 
 #![cfg_attr(feature = "cargo-clippy", allow(type_complexity))]

@@ -6,6 +6,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#![doc(html_root_url = "https://docs.rs/indoc/0.2.0")]
+
 #![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 
 #[macro_use]

@@ -1,5 +1,5 @@
 [package]
-name = "indoc"
+name = "indoc-impl"
 version = "0.2.0"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT/Apache-2.0"
@@ -8,12 +8,11 @@ repository = "https://github.com/dtolnay/indoc"
 documentation = "https://github.com/dtolnay/indoc"
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 
+[lib]
+proc-macro = true
+
 [dependencies]
-indoc-impl = { version = "0.2", path = "impl" }
 proc-macro-hack = "0.3"
-
-[dev-dependencies]
-compiletest_rs = "0.3"
-
-[workspace]
-members = ["impl", "unindent"]
+quote = "0.3"
+syn = "0.11"
+unindent = { version = "0.1", path = "../unindent" }

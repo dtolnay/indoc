@@ -4,18 +4,13 @@ Indented Documents (indoc)
 [![Build Status](https://api.travis-ci.org/dtolnay/indoc.svg?branch=master)](https://travis-ci.org/dtolnay/indoc)
 [![Latest Version](https://img.shields.io/crates/v/indoc.svg)](https://crates.io/crates/indoc)
 
-This crate provides a Rust compiler plugin for indented string literals. The
+This crate provides a procedural macro for indented string literals. The
 `indoc!()` macro takes a multiline string literal and un-indents it so the
 leftmost non-space character is in the first column.
 
-## Installation
-
-Indoc is available on [crates.io](https://crates.io/crates/indoc). Use the
-following in `Cargo.toml`:
-
 ```toml
 [dependencies]
-indoc = "^0.1"
+indoc = "0.2"
 ```
 
 Release notes are available under [GitHub releases](https://github.com/dtolnay/indoc/releases).
@@ -23,8 +18,8 @@ Release notes are available under [GitHub releases](https://github.com/dtolnay/i
 ## Using Indoc
 
 ```rust
-#![feature(plugin)]
-#![plugin(indoc)]
+#[macro_use]
+extern crate indoc;
 
 fn main() {
     let testing = indoc!("
@@ -41,8 +36,8 @@ fn main() {
 Indoc also works with raw string literals:
 
 ```rust
-#![feature(plugin)]
-#![plugin(indoc)]
+#[macro_use]
+extern crate indoc;
 
 fn main() {
     let testing = indoc!(r#"
@@ -59,8 +54,8 @@ fn main() {
 And byte string literals:
 
 ```rust
-#![feature(plugin)]
-#![plugin(indoc)]
+#[macro_use]
+extern crate indoc;
 
 fn main() {
     let testing = indoc!(b"
@@ -99,7 +94,7 @@ indoc!("            /      indoc!(             /      indoc!("line one
 ## Unindent
 
 Indoc's indentation logic is available in the `unindent` crate. This may be
-useful if you are not interested in using an unstable compiler plugin.
+useful for processing strings that are not statically known at compile time.
 
 The crate exposes a single function `unindent(&str) -> String`.
 
@@ -107,10 +102,12 @@ The crate exposes a single function `unindent(&str) -> String`.
 extern crate unindent;
 use unindent::unindent;
 
-let indented = "
-        line one
-        line two";
-assert_eq!("line one\nline two", unindent(indented));
+fn main() {
+    let indented = "
+            line one
+            line two";
+    assert_eq!("line one\nline two", unindent(indented));
+}
 ```
 
 ## License

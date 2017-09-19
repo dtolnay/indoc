@@ -31,7 +31,7 @@
 //! }
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/unindent/0.1.1")]
+#![doc(html_root_url = "https://docs.rs/unindent/0.1.2")]
 
 #![cfg_attr(feature = "cargo-clippy", allow(type_complexity))]
 

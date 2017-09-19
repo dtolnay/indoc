@@ -1,0 +1,8 @@
+error: proc macro panicked
+  --> $DIR/non-lit.rs:13:5
+   |
+13 |     indoc!(fail);
+   |     ^^^^^^^^^^^^^
+   |
+   = help: message: argument must be a single string literal
+

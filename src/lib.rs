@@ -20,8 +20,11 @@
 //! # Using Indoc
 //!
 //! ```rust
-//! #[macro_use]
+#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro)]")]
+#![cfg_attr(feature = "unstable", doc = "")]
+#![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
+#![cfg_attr(feature = "unstable", doc = " use indoc::indoc;")]
 //!
 //! fn main() {
 //!     let testing = indoc!("
@@ -38,8 +41,11 @@
 //! Indoc also works with raw string literals:
 //!
 //! ```rust
-//! #[macro_use]
+#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro)]")]
+#![cfg_attr(feature = "unstable", doc = "")]
+#![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
+#![cfg_attr(feature = "unstable", doc = " use indoc::indoc;")]
 //!
 //! fn main() {
 //!     let testing = indoc!(r#"
@@ -56,8 +62,11 @@
 //! And byte string literals:
 //!
 //! ```rust
-//! #[macro_use]
+#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro)]")]
+#![cfg_attr(feature = "unstable", doc = "")]
+#![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
+#![cfg_attr(feature = "unstable", doc = " use indoc::indoc;")]
 //!
 //! fn main() {
 //!     let testing = indoc!(b"
@@ -95,17 +104,27 @@
 
 #![doc(html_root_url = "https://docs.rs/indoc/0.2.0")]
 
+#![cfg_attr(feature = "unstable", feature(decl_macro, proc_macro, use_extern_macros))]
+
 #![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 
+#[cfg(not(feature = "unstable"))]
 #[macro_use]
 extern crate proc_macro_hack;
 
 #[allow(unused_imports)]
-#[macro_use]
-extern crate indoc_impl;
+#[cfg_attr(not(feature = "unstable"), macro_use)]
+pub extern crate indoc_impl;
+
+#[cfg(feature = "unstable")]
+pub use indoc_impl::indoc;
+
+#[cfg(not(feature = "unstable"))]
 #[doc(hidden)]
 pub use indoc_impl::*;
 
+#[cfg(not(feature = "unstable"))]
 proc_macro_expr_decl! {
+    #[doc(hidden)]
     indoc! => indoc_impl
 }

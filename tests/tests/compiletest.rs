@@ -6,29 +6,33 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#![cfg(feature = "compiletest")]
+
 extern crate compiletest_rs as compiletest;
 
 use std::env;
 
-fn run_mode(mode: &'static str) {
+fn run_dir(dir: &'static str) {
     let mut config = compiletest::Config::default();
 
-    config.mode = mode.parse().expect("invalid mode");
-    config.target_rustcflags = Some("-L target/debug/deps".to_owned());
+    config.mode = compiletest::common::Mode::Ui;
+    config.target_rustcflags = Some("-L ../target/debug/deps".to_owned());
     if let Ok(name) = env::var("TESTNAME") {
         config.filter = Some(name);
     }
-    config.src_base = format!("tests/{}", mode).into();
+    config.src_base = format!("tests/{}", dir).into();
 
     compiletest::run_tests(&config);
 }
 
-#[test]
-fn run_pass() {
-    run_mode("run-pass");
-}
-
+#[cfg(not(feature = "unstable"))]
 #[test]
 fn ui() {
-    run_mode("ui");
+    run_dir("ui-stable");
+}
+
+#[cfg(feature = "unstable")]
+#[test]
+fn ui() {
+    run_dir("ui-unstable");
 }

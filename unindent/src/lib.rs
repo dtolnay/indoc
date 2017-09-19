@@ -94,9 +94,11 @@ trait BytesExt {
 
 impl BytesExt for [u8] {
     fn lines(&self) -> Lines {
-        let is_newline: fn(&u8) -> bool = |&b| b == b'\n';
+        fn is_newline(b: &u8) -> bool {
+            *b == b'\n'
+        }
         Lines {
-            split: self.split(is_newline).peekable(),
+            split: self.split(is_newline as fn(&u8) -> bool).peekable(),
         }
     }
 }

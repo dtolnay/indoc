@@ -24,11 +24,6 @@ fn run_mode(mode: &'static str) {
 }
 
 #[test]
-fn run_pass() {
-    run_mode("run-pass");
-}
-
-#[test]
 fn ui() {
     run_mode("ui");
 }

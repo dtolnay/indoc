@@ -8,12 +8,12 @@ repository = "https://github.com/dtolnay/indoc"
 documentation = "https://github.com/dtolnay/indoc"
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 
+[features]
+unstable = ["indoc-impl/unstable"]
+
 [dependencies]
 indoc-impl = { version = "0.2", path = "impl" }
 proc-macro-hack = "0.3"
 
-[dev-dependencies]
-compiletest_rs = "0.3"
-
 [workspace]
-members = ["impl", "unindent"]
+members = ["impl", "tests", "unindent"]

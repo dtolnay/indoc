@@ -1,10 +1,16 @@
 sudo: false
-
 language: rust
 
-rust:
-  - nightly
+matrix:
+  include:
+    - rust: stable
+    - rust: beta
+    - rust: nightly
+      env: TEST_FEATURES="compiletest"
+    - rust: nightly
+      env: FEATURES="unstable" TEST_FEATURES="compiletest unstable"
 
 script:
-  - cargo build --verbose
-  - cargo test --verbose
+  - cargo build --features "${FEATURES:-}" --verbose
+  - cargo test --features "${FEATURES:-}" --verbose
+  - cargo test --features "${TEST_FEATURES:-}" --manifest-path tests/Cargo.toml --verbose

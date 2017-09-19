@@ -8,6 +8,14 @@
 
 #![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.0")]
 
+#![cfg_attr(feature = "unstable", feature(proc_macro))]
+
+#[cfg(feature = "unstable")]
+extern crate proc_macro;
+#[cfg(feature = "unstable")]
+use proc_macro::TokenStream;
+
+#[cfg(not(feature = "unstable"))]
 #[macro_use]
 extern crate proc_macro_hack;
 
@@ -21,37 +29,55 @@ use unindent::*;
 
 use syn::{TokenTree, Token, Lit};
 
+use std::fmt::Debug;
+use std::str::FromStr;
+
+#[cfg(feature = "unstable")]
+#[proc_macro]
+pub fn indoc(input: TokenStream) -> TokenStream {
+    expand(&input)
+}
+
+#[cfg(not(feature = "unstable"))]
 proc_macro_expr_impl! {
     pub fn indoc_impl(input: &str) -> String {
-        let source = input.to_string();
-
-        let tts = syn::parse_token_trees(&source).unwrap();
-
-        if tts.len() != 1 {
-            panic!("argument must be a single string literal, but got {} arguments", tts.len());
-        }
-
-        let tt = tts.into_iter().next().unwrap();
-
-        let mut lit = match tt {
-            TokenTree::Token(Token::Literal(lit)) => lit,
-            _ => {
-                panic!("argument must be a single string literal");
-            }
-        };
-
-        match lit {
-            Lit::Str(ref mut s, _style) => {
-                *s = unindent(s);
-            }
-            Lit::ByteStr(ref mut v, _style) => {
-                *v = unindent_bytes(v);
-            }
-            _ => {
-                panic!("argument must be a single string literal");
-            }
-        }
-
-        quote!(#lit).parse().unwrap()
+        expand(input)
     }
+}
+
+fn expand<T, R>(input: &T) -> R
+    where T: ?Sized + ToString,
+          R: FromStr,
+          R::Err: Debug
+{
+    let source = input.to_string();
+
+    let tts = syn::parse_token_trees(&source).unwrap();
+
+    if tts.len() != 1 {
+        panic!("argument must be a single string literal, but got {} arguments", tts.len());
+    }
+
+    let tt = tts.into_iter().next().unwrap();
+
+    let mut lit = match tt {
+        TokenTree::Token(Token::Literal(lit)) => lit,
+        _ => {
+            panic!("argument must be a single string literal");
+        }
+    };
+
+    match lit {
+        Lit::Str(ref mut s, _style) => {
+            *s = unindent(s);
+        }
+        Lit::ByteStr(ref mut v, _style) => {
+            *v = unindent_bytes(v);
+        }
+        _ => {
+            panic!("argument must be a single string literal");
+        }
+    }
+
+    quote!(#lit).parse().unwrap()
 }

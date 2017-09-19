@@ -6,8 +6,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[macro_use]
+#![cfg_attr(feature = "unstable", feature(proc_macro))]
+
+#[cfg_attr(not(feature = "unstable"), macro_use)]
 extern crate indoc;
+
+#[cfg(feature = "unstable")]
+use indoc::indoc;
 
 #[test]
 fn byte_string() {
@@ -132,4 +137,11 @@ fn trailing_whitespace() {
         end");
     let expected = "2 below\n  \n0 below\n\n-2 below\n\nend";
     assert_eq!(indoc, expected);
+}
+
+#[cfg(feature = "unstable")]
+#[test]
+fn format() {
+    let s = format!(indoc!("{}"), true);
+    assert_eq!(s, "true");
 }

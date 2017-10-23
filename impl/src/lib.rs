@@ -10,7 +10,6 @@
 
 #![cfg_attr(feature = "unstable", feature(proc_macro))]
 
-#[cfg(feature = "unstable")]
 extern crate proc_macro;
 #[cfg(feature = "unstable")]
 use proc_macro::TokenStream;

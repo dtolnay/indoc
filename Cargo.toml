@@ -13,7 +13,7 @@ unstable = ["indoc-impl/unstable"]
 
 [dependencies]
 indoc-impl = { version = "0.2", path = "impl" }
-proc-macro-hack = "0.3"
+proc-macro-hack = { version = "0.3", default-features = false }
 
 [workspace]
 members = ["impl", "tests", "unindent"]

@@ -15,7 +15,7 @@ unstable = []
 proc-macro = true
 
 [dependencies]
-proc-macro-hack = "0.3"
+proc-macro-hack = { version = "0.3", default-features = false }
 quote = "0.3"
 syn = "0.11"
 unindent = { version = "0.1", path = "../unindent" }

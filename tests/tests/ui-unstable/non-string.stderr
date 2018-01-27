@@ -1,3 +1,5 @@
+thread 'rustc' panicked at 'argument must be a single string literal', impl/src/lib.rs:78:13
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
 error: proc macro panicked
   --> $DIR/non-string.rs:13:5
    |

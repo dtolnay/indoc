@@ -10,3 +10,5 @@ error: proc macro panicked
    |
    = help: message: argument must be a single string literal, but got 2 arguments
 
+error: aborting due to previous error
+

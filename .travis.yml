@@ -10,8 +10,6 @@ matrix:
       env: TEST_FEATURES="compiletest"
     - rust: nightly
       env: FEATURES="unstable" TEST_FEATURES="compiletest unstable"
-  allow_failures:
-    - env: FEATURES="unstable" TEST_FEATURES="compiletest unstable"
 
 script:
   - cargo build --features "${FEATURES:-}" --verbose

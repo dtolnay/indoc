@@ -6,7 +6,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![cfg_attr(feature = "unstable", feature(proc_macro))]
+#![cfg_attr(feature = "unstable", feature(proc_macro, proc_macro_non_items))]
 
 #[cfg_attr(not(feature = "unstable"), macro_use)]
 extern crate indoc;

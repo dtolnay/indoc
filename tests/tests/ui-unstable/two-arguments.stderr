@@ -1,11 +1,11 @@
 error: proc macro panicked
-  --> $DIR/two-arguments.rs:13:5
+  --> $DIR/two-arguments.rs:15:5
    |
-13 | /     indoc!("
-14 | |         a
-15 | |         b
-16 | |         c
-17 | |         " 64);
+15 | /     indoc!("
+16 | |         a
+17 | |         b
+18 | |         c
+19 | |         " 64);
    | |______________^
    |
    = help: message: argument must be a single string literal, but got 2 arguments

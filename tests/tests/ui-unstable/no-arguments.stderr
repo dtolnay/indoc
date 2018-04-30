@@ -1,7 +1,7 @@
 error: proc macro panicked
-  --> $DIR/no-arguments.rs:13:5
+  --> $DIR/no-arguments.rs:15:5
    |
-13 |     indoc!();
+15 |     indoc!();
    |     ^^^^^^^^^
    |
    = help: message: argument must be a single string literal, but got 0 arguments

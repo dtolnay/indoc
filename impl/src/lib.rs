@@ -6,7 +6,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.3")]
+#![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.4")]
 #![cfg_attr(feature = "unstable", feature(proc_macro))]
 
 #[cfg(feature = "unstable")]

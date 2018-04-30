@@ -7,6 +7,7 @@ description = "Indented document literals"
 repository = "https://github.com/dtolnay/indoc"
 documentation = "https://github.com/dtolnay/indoc"
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
+readme = "README.md"
 
 [features]
 unstable = ["indoc-impl/unstable"]

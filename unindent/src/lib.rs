@@ -32,7 +32,6 @@
 //! ```
 
 #![doc(html_root_url = "https://docs.rs/unindent/0.1.2")]
-
 #![cfg_attr(feature = "cargo-clippy", allow(type_complexity))]
 
 use std::iter::Peekable;
@@ -49,8 +48,7 @@ pub fn unindent(s: &str) -> String {
 pub fn unindent_bytes(s: &[u8]) -> Vec<u8> {
     // Document may start either on the same line as opening quote or
     // on the next line
-    let ignore_first_line = s.starts_with(b"\n") ||
-                            s.starts_with(b"\r\n");
+    let ignore_first_line = s.starts_with(b"\n") || s.starts_with(b"\r\n");
 
     // Largest number of spaces that can be removed from every
     // non-whitespace-only line after the first

@@ -7,7 +7,6 @@
 // except according to those terms.
 
 #![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.3")]
-
 #![cfg_attr(feature = "unstable", feature(proc_macro))]
 
 #[cfg(feature = "unstable")]
@@ -27,7 +26,7 @@ extern crate unindent;
 use unindent::*;
 
 use proc_macro2::TokenStream;
-use syn::{Lit, LitStr, LitByteStr};
+use syn::{Lit, LitByteStr, LitStr};
 
 use std::fmt::Debug;
 use std::str::FromStr;
@@ -46,15 +45,19 @@ proc_macro_expr_impl! {
 }
 
 fn expand<T, R>(input: &T) -> R
-    where T: ?Sized + ToString,
-          R: FromStr,
-          R::Err: Debug
+where
+    T: ?Sized + ToString,
+    R: FromStr,
+    R::Err: Debug,
 {
     let source = input.to_string().parse::<TokenStream>().unwrap();
 
     let len = source.clone().into_iter().count();
     if len != 1 {
-        panic!("argument must be a single string literal, but got {} arguments", len);
+        panic!(
+            "argument must be a single string literal, but got {} arguments",
+            len
+        );
     }
 
     let lit = match syn::parse2::<Lit>(source) {

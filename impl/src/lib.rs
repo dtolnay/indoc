@@ -55,7 +55,7 @@ where
     let len = source.clone().into_iter().count();
     if len != 1 {
         panic!(
-            "argument must be a single string literal, but got {} arguments",
+            "argument must be a single string literal, but got {} tokens",
             len
         );
     }

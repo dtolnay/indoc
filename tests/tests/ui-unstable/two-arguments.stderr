@@ -8,7 +8,7 @@ error: proc macro panicked
 19 | |         " 64);
    | |______________^
    |
-   = help: message: argument must be a single string literal, but got 2 arguments
+   = help: message: argument must be a single string literal, but got 2 tokens
 
 error: aborting due to previous error
 

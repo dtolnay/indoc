@@ -12,13 +12,12 @@
 
 #[cfg(feature = "unstable")]
 extern crate proc_macro;
-#[cfg(feature = "unstable")]
-use proc_macro::TokenStream;
 
 #[cfg(not(feature = "unstable"))]
 #[macro_use]
 extern crate proc_macro_hack;
 
+extern crate proc_macro2;
 extern crate syn;
 
 #[macro_use]
@@ -27,14 +26,15 @@ extern crate quote;
 extern crate unindent;
 use unindent::*;
 
-use syn::{TokenTree, Token, Lit};
+use proc_macro2::TokenStream;
+use syn::{Lit, LitStr, LitByteStr};
 
 use std::fmt::Debug;
 use std::str::FromStr;
 
 #[cfg(feature = "unstable")]
 #[proc_macro]
-pub fn indoc(input: TokenStream) -> TokenStream {
+pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     expand(&input)
 }
 
@@ -50,34 +50,33 @@ fn expand<T, R>(input: &T) -> R
           R: FromStr,
           R::Err: Debug
 {
-    let source = input.to_string();
+    let source = input.to_string().parse::<TokenStream>().unwrap();
 
-    let tts = syn::parse_token_trees(&source).unwrap();
-
-    if tts.len() != 1 {
-        panic!("argument must be a single string literal, but got {} arguments", tts.len());
+    let len = source.clone().into_iter().count();
+    if len != 1 {
+        panic!("argument must be a single string literal, but got {} arguments", len);
     }
 
-    let tt = tts.into_iter().next().unwrap();
+    let lit = match syn::parse2::<Lit>(source) {
+        Ok(lit) => lit,
+        Err(_) => {
+            panic!("argument must be a single string literal");
+        }
+    };
 
-    let mut lit = match tt {
-        TokenTree::Token(Token::Literal(lit)) => lit,
+    let lit = match lit {
+        Lit::Str(lit) => {
+            let v = unindent(&lit.value());
+            Lit::Str(LitStr::new(&v, lit.span()))
+        }
+        Lit::ByteStr(lit) => {
+            let v = unindent_bytes(&lit.value());
+            Lit::ByteStr(LitByteStr::new(&v, lit.span()))
+        }
         _ => {
             panic!("argument must be a single string literal");
         }
     };
 
-    match lit {
-        Lit::Str(ref mut s, _style) => {
-            *s = unindent(s);
-        }
-        Lit::ByteStr(ref mut v, _style) => {
-            *v = unindent_bytes(v);
-        }
-        _ => {
-            panic!("argument must be a single string literal");
-        }
-    }
-
-    quote!(#lit).parse().unwrap()
+    quote!(#lit).to_string().parse().unwrap()
 }

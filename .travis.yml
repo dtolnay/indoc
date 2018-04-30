@@ -13,5 +13,7 @@ matrix:
 
 script:
   - cargo build --features "${FEATURES:-}" --verbose
+  - cargo clean
   - cargo test --features "${FEATURES:-}" --verbose
+  - cargo clean
   - cargo test --features "${TEST_FEATURES:-}" --manifest-path tests/Cargo.toml --verbose

@@ -7,7 +7,6 @@
 // except according to those terms.
 
 #![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.6")]
-#![cfg_attr(feature = "unstable", feature(proc_macro))]
 
 #[cfg(feature = "unstable")]
 extern crate proc_macro;

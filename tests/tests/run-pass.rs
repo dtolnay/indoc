@@ -142,7 +142,7 @@ fn trailing_whitespace() {
 
 #[cfg(feature = "unstable")]
 #[test]
-fn format() {
+fn indoc_as_format_string() {
     let s = format!(indoc!("{}"), true);
     assert_eq!(s, "true");
 }

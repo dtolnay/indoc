@@ -52,7 +52,8 @@ pub fn unindent_bytes(s: &[u8]) -> Vec<u8> {
 
     // Largest number of spaces that can be removed from every
     // non-whitespace-only line after the first
-    let spaces = s.lines()
+    let spaces = s
+        .lines()
         .skip(1)
         .filter_map(count_spaces)
         .min()

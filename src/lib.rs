@@ -20,7 +20,10 @@
 //! # Using Indoc
 //!
 //! ```rust
-#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_non_items, use_extern_macros)]")]
+#![cfg_attr(
+    feature = "unstable",
+    doc = " #![feature(proc_macro_non_items, use_extern_macros)]"
+)]
 #![cfg_attr(feature = "unstable", doc = "")]
 #![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
@@ -41,7 +44,10 @@
 //! Indoc also works with raw string literals:
 //!
 //! ```rust
-#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_non_items, use_extern_macros)]")]
+#![cfg_attr(
+    feature = "unstable",
+    doc = " #![feature(proc_macro_non_items, use_extern_macros)]"
+)]
 #![cfg_attr(feature = "unstable", doc = "")]
 #![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
@@ -62,7 +68,10 @@
 //! And byte string literals:
 //!
 //! ```rust
-#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_non_items, use_extern_macros)]")]
+#![cfg_attr(
+    feature = "unstable",
+    doc = " #![feature(proc_macro_non_items, use_extern_macros)]"
+)]
 #![cfg_attr(feature = "unstable", doc = "")]
 #![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;

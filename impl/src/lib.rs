@@ -6,7 +6,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.7")]
+#![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.8")]
 
 #[cfg(feature = "unstable")]
 extern crate proc_macro;

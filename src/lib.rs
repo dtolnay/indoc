@@ -111,7 +111,7 @@
 //!    ")            /            ")            /
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/indoc/0.2.7")]
+#![doc(html_root_url = "https://docs.rs/indoc/0.2.8")]
 #![cfg_attr(feature = "unstable", feature(decl_macro))]
 #![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 #![no_std]

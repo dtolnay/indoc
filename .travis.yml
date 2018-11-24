@@ -7,8 +7,10 @@ matrix:
     - rust: stable
     - rust: beta
     - rust: nightly
+      name: Stable compiletest
       env: TEST_FEATURES="compiletest"
     - rust: nightly
+      name: Unstable compiletest
       env: FEATURES="unstable" TEST_FEATURES="compiletest unstable"
 
 script:

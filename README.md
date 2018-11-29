@@ -18,8 +18,8 @@ Release notes are available under [GitHub releases](https://github.com/dtolnay/i
 ## Using Indoc
 
 ```rust
-#[macro_use]
 extern crate indoc;
+use indoc::indoc;
 
 fn main() {
     let testing = indoc!("
@@ -36,8 +36,8 @@ fn main() {
 Indoc also works with raw string literals:
 
 ```rust
-#[macro_use]
 extern crate indoc;
+use indoc::indoc;
 
 fn main() {
     let testing = indoc!(r#"
@@ -54,8 +54,8 @@ fn main() {
 And byte string literals:
 
 ```rust
-#[macro_use]
 extern crate indoc;
+use indoc::indoc;
 
 fn main() {
     let testing = indoc!(b"

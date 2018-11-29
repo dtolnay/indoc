@@ -9,10 +9,7 @@
 #![cfg_attr(feature = "unstable", feature(proc_macro_hygiene))]
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
-#[cfg_attr(not(feature = "unstable"), macro_use)]
 extern crate indoc;
-
-#[cfg(feature = "unstable")]
 use indoc::indoc;
 
 #[test]

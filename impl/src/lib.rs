@@ -8,18 +8,19 @@
 
 #![doc(html_root_url = "https://docs.rs/indoc-impl/0.2.8")]
 
-#[cfg(feature = "unstable")]
 extern crate proc_macro;
 
 #[cfg(not(feature = "unstable"))]
-#[macro_use]
 extern crate proc_macro_hack;
+
+#[cfg(not(feature = "unstable"))]
+use proc_macro_hack::proc_macro_hack;
 
 extern crate proc_macro2;
 extern crate syn;
 
-#[macro_use]
 extern crate quote;
+use quote::quote;
 
 extern crate unindent;
 use unindent::*;
@@ -27,29 +28,10 @@ use unindent::*;
 use proc_macro2::TokenStream;
 use syn::{Lit, LitByteStr, LitStr};
 
-use std::fmt::Debug;
-use std::str::FromStr;
-
-#[cfg(feature = "unstable")]
-#[proc_macro]
+#[cfg_attr(feature = "unstable", proc_macro)]
+#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
 pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    expand(&input)
-}
-
-#[cfg(not(feature = "unstable"))]
-proc_macro_expr_impl! {
-    pub fn indoc_impl(input: &str) -> String {
-        expand(input)
-    }
-}
-
-fn expand<T, R>(input: &T) -> R
-where
-    T: ?Sized + ToString,
-    R: FromStr,
-    R::Err: Debug,
-{
-    let source = input.to_string().parse::<TokenStream>().unwrap();
+    let source = TokenStream::from(input);
 
     let len = source.clone().into_iter().count();
     if len != 1 {
@@ -80,5 +62,5 @@ where
         }
     };
 
-    quote!(#lit).to_string().parse().unwrap()
+    proc_macro::TokenStream::from(quote!(#lit))
 }

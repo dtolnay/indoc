@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! indoc = "0.2"
+//! indoc = "0.3"
 //! ```
 //!
 //! Release notes are available under [GitHub releases](https://github.com/dtolnay/indoc/releases).
@@ -108,7 +108,7 @@
 //!    ")            /            ")            /
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/indoc/0.2.8")]
+#![doc(html_root_url = "https://docs.rs/indoc/0.3.0")]
 #![cfg_attr(feature = "unstable", feature(decl_macro))]
 #![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 #![no_std]

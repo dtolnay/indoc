@@ -10,7 +10,7 @@ leftmost non-space character is in the first column.
 
 ```toml
 [dependencies]
-indoc = "0.2"
+indoc = "0.3"
 ```
 
 Release notes are available under [GitHub releases](https://github.com/dtolnay/indoc/releases).

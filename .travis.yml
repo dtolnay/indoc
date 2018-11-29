@@ -3,7 +3,7 @@ language: rust
 
 matrix:
   include:
-    - rust: 1.15.0
+    - rust: 1.30.0
     - rust: stable
     - rust: beta
     - rust: nightly

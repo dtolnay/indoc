@@ -16,7 +16,7 @@ unstable = []
 proc-macro = true
 
 [dependencies]
-proc-macro-hack = "0.4"
+proc-macro-hack = "0.5"
 proc-macro2 = { version = "0.4", default-features = false }
 quote = { version = "0.6", default-features = false }
 syn = { version = "0.15", default-features = false, features = ["derive", "parsing", "printing"] }

@@ -25,9 +25,8 @@
     doc = " #![feature(proc_macro_hygiene)]"
 )]
 #![cfg_attr(feature = "unstable", doc = "")]
-#![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
-#![cfg_attr(feature = "unstable", doc = " use indoc::indoc;")]
+//! use indoc::indoc;
 //!
 //! fn main() {
 //!     let testing = indoc!("
@@ -49,9 +48,8 @@
     doc = " #![feature(proc_macro_hygiene)]"
 )]
 #![cfg_attr(feature = "unstable", doc = "")]
-#![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
-#![cfg_attr(feature = "unstable", doc = " use indoc::indoc;")]
+//! use indoc::indoc;
 //!
 //! fn main() {
 //!     let testing = indoc!(r#"
@@ -73,9 +71,8 @@
     doc = " #![feature(proc_macro_hygiene)]"
 )]
 #![cfg_attr(feature = "unstable", doc = "")]
-#![cfg_attr(not(feature = "unstable"), doc = " #[macro_use]")]
 //! extern crate indoc;
-#![cfg_attr(feature = "unstable", doc = " use indoc::indoc;")]
+//! use indoc::indoc;
 //!
 //! fn main() {
 //!     let testing = indoc!(b"
@@ -117,22 +114,12 @@
 #![no_std]
 
 #[cfg(not(feature = "unstable"))]
-#[macro_use]
 extern crate proc_macro_hack;
 
-#[allow(unused_imports)]
-#[cfg_attr(not(feature = "unstable"), macro_use)]
-pub extern crate indoc_impl;
+extern crate indoc_impl;
 
-#[cfg(feature = "unstable")]
+#[cfg(not(feature = "unstable"))]
+use proc_macro_hack::proc_macro_hack;
+
+#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
 pub use indoc_impl::indoc;
-
-#[cfg(not(feature = "unstable"))]
-#[doc(hidden)]
-pub use indoc_impl::*;
-
-#[cfg(not(feature = "unstable"))]
-proc_macro_expr_decl! {
-    #[doc(hidden)]
-    indoc! => indoc_impl
-}

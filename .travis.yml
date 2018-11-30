@@ -12,6 +12,10 @@ matrix:
     - rust: nightly
       name: Unstable compiletest
       env: FEATURES="unstable" TEST_FEATURES="compiletest unstable"
+    - rust: nightly
+      name: Minimal versions
+      before_script:
+        - cargo update -Z minimal-versions
 
 script:
   - cargo build --features "${FEATURES:-}"

@@ -21,6 +21,7 @@ fn run_dir(dir: &'static str) {
         config.filter = Some(name);
     }
     config.src_base = format!("tests/{}", dir).into();
+    config.build_base = std::path::PathBuf::from("../target/ui");
 
     compiletest::run_tests(&config);
 }

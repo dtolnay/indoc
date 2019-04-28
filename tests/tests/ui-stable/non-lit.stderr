@@ -1,7 +1,7 @@
 error: proc-macro derive panicked
-  --> $DIR/non-lit.rs:13:5
+  --> $DIR/non-lit.rs:12:5
    |
-13 |     indoc!(fail);
+12 |     indoc!(fail);
    |     ^^^^^^^^^^^^^
    |
    = help: message: argument must be a single string literal

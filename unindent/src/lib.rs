@@ -20,7 +20,6 @@
 //! - `unindent_bytes(&[u8]) -> Vec<u8>`
 //!
 //! ```rust
-//! extern crate unindent;
 //! use unindent::unindent;
 //!
 //! fn main() {

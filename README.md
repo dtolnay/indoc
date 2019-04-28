@@ -18,7 +18,6 @@ Release notes are available under [GitHub releases](https://github.com/dtolnay/i
 ## Using Indoc
 
 ```rust
-extern crate indoc;
 use indoc::indoc;
 
 fn main() {
@@ -36,7 +35,6 @@ fn main() {
 Indoc also works with raw string literals:
 
 ```rust
-extern crate indoc;
 use indoc::indoc;
 
 fn main() {
@@ -54,7 +52,6 @@ fn main() {
 And byte string literals:
 
 ```rust
-extern crate indoc;
 use indoc::indoc;
 
 fn main() {
@@ -102,7 +99,6 @@ The crate exposes two functions:
 - `unindent_bytes(&[u8]) -> Vec<u8>`
 
 ```rust
-extern crate unindent;
 use unindent::unindent;
 
 fn main() {

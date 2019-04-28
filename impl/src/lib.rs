@@ -11,22 +11,12 @@
 extern crate proc_macro;
 
 #[cfg(not(feature = "unstable"))]
-extern crate proc_macro_hack;
-
-#[cfg(not(feature = "unstable"))]
 use proc_macro_hack::proc_macro_hack;
 
-extern crate proc_macro2;
-extern crate syn;
-
-extern crate quote;
-use quote::quote;
-
-extern crate unindent;
-use unindent::*;
-
 use proc_macro2::TokenStream;
+use quote::quote;
 use syn::{Lit, LitByteStr, LitStr};
+use unindent::*;
 
 #[cfg_attr(feature = "unstable", proc_macro)]
 #[cfg_attr(not(feature = "unstable"), proc_macro_hack)]

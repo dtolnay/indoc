@@ -8,22 +8,23 @@
 
 #![cfg(feature = "compiletest")]
 
-extern crate compiletest_rs as compiletest;
-
-use std::env;
+use compiletest_rs as compiletest;
 
 fn run_dir(dir: &'static str) {
-    let mut config = compiletest::Config::default();
-
-    config.mode = compiletest::common::Mode::Ui;
-    config.target_rustcflags = Some("-L ../target/debug/deps".to_owned());
-    if let Ok(name) = env::var("TESTNAME") {
-        config.filter = Some(name);
-    }
-    config.src_base = format!("tests/{}", dir).into();
-    config.build_base = std::path::PathBuf::from("../target/ui");
-
-    compiletest::run_tests(&config);
+    compiletest::run_tests(&compiletest::Config {
+        mode: compiletest::common::Mode::Ui,
+        src_base: format!("tests/{}", dir).into(),
+        target_rustcflags: Some(String::from(
+            "\
+             --edition=2018 \
+             -L ../target/debug/deps \
+             -Z unstable-options \
+             --extern indoc \
+             ",
+        )),
+        build_base: std::path::PathBuf::from("../target/ui"),
+        ..Default::default()
+    });
 }
 
 #[cfg(not(feature = "unstable"))]

@@ -1,7 +1,7 @@
 error: proc macro panicked
-  --> $DIR/non-string.rs:15:5
+  --> $DIR/non-string.rs:14:5
    |
-15 |     indoc!(64);
+14 |     indoc!(64);
    |     ^^^^^^^^^^^
    |
    = help: message: argument must be a single string literal

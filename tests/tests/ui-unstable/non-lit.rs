@@ -8,7 +8,6 @@
 
 #![feature(proc_macro_hygiene)]
 
-extern crate indoc;
 use indoc::indoc;
 
 fn main() {

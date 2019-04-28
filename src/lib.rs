@@ -22,7 +22,6 @@
 //! ```rust
 #![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
 #![cfg_attr(feature = "unstable", doc = "")]
-//! extern crate indoc;
 //! use indoc::indoc;
 //!
 //! fn main() {
@@ -42,7 +41,6 @@
 //! ```rust
 #![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
 #![cfg_attr(feature = "unstable", doc = "")]
-//! extern crate indoc;
 //! use indoc::indoc;
 //!
 //! fn main() {
@@ -62,7 +60,6 @@
 //! ```rust
 #![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
 #![cfg_attr(feature = "unstable", doc = "")]
-//! extern crate indoc;
 //! use indoc::indoc;
 //!
 //! fn main() {
@@ -103,11 +100,6 @@
 #![cfg_attr(feature = "unstable", feature(decl_macro))]
 #![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 #![no_std]
-
-#[cfg(not(feature = "unstable"))]
-extern crate proc_macro_hack;
-
-extern crate indoc_impl;
 
 #[cfg(not(feature = "unstable"))]
 use proc_macro_hack::proc_macro_hack;

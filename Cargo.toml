@@ -13,7 +13,7 @@ readme = "README.md"
 unstable = ["indoc-impl/unstable"]
 
 [dependencies]
-indoc-impl = { version = "0.3", path = "impl" }
+indoc-impl = { version = "0.3.1", path = "impl" }
 proc-macro-hack = "0.5.3"
 
 [workspace]

@@ -19,7 +19,7 @@
 //! - `unindent(&str) -> String`
 //! - `unindent_bytes(&[u8]) -> Vec<u8>`
 //!
-//! ```rust
+//! ```
 //! use unindent::unindent;
 //!
 //! fn main() {

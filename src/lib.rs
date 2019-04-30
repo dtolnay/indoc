@@ -19,7 +19,7 @@
 //!
 //! # Using Indoc
 //!
-//! ```rust
+//! ```
 #![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
 #![cfg_attr(feature = "unstable", doc = "")]
 //! use indoc::indoc;
@@ -38,7 +38,7 @@
 //!
 //! Indoc also works with raw string literals:
 //!
-//! ```rust
+//! ```
 #![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
 #![cfg_attr(feature = "unstable", doc = "")]
 //! use indoc::indoc;
@@ -57,7 +57,7 @@
 //!
 //! And byte string literals:
 //!
-//! ```rust
+//! ```
 #![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
 #![cfg_attr(feature = "unstable", doc = "")]
 //! use indoc::indoc;

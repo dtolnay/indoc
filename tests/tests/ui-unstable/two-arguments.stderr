@@ -9,6 +9,3 @@ error: proc macro panicked
    | |______________^
    |
    = help: message: argument must be a single string literal, but got 2 tokens
-
-error: aborting due to previous error
-

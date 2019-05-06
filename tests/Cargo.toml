@@ -6,9 +6,12 @@ edition = "2018"
 publish = false
 
 [features]
-compiletest = ["compiletest_rs"]
 unstable = ["indoc/unstable"]
 
 [dependencies]
-compiletest_rs = { version = "0.3", optional = true, features = ["stable"] }
 indoc = { path = ".." }
+
+[dev-dependencies]
+indoc = { path = ".." }
+select-rustc = "0.1"
+trybuild = "1.0"

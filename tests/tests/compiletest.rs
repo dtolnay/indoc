@@ -6,35 +6,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![cfg(feature = "compiletest")]
-
-use compiletest_rs as compiletest;
-
-fn run_dir(dir: &'static str) {
-    compiletest::run_tests(&compiletest::Config {
-        mode: compiletest::common::Mode::Ui,
-        src_base: format!("tests/{}", dir).into(),
-        target_rustcflags: Some(String::from(
-            "\
-             --edition=2018 \
-             -L ../target/debug/deps \
-             -Z unstable-options \
-             --extern indoc \
-             ",
-        )),
-        build_base: std::path::PathBuf::from("../target/ui"),
-        ..Default::default()
-    });
-}
-
-#[cfg(not(feature = "unstable"))]
+#[rustc::attr(not(nightly), ignore)]
 #[test]
 fn ui() {
-    run_dir("ui-stable");
-}
-
-#[cfg(feature = "unstable")]
-#[test]
-fn ui() {
-    run_dir("ui-unstable");
+    let t = trybuild::TestCases::new();
+    if cfg!(feature = "unstable") {
+        t.compile_fail("tests/ui-unstable/*.rs");
+    } else {
+        t.compile_fail("tests/ui-stable/*.rs");
+    }
 }

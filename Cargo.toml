@@ -17,8 +17,12 @@ unstable = ["indoc-impl/unstable"]
 indoc-impl = { version = "=0.3.3", path = "impl" }
 proc-macro-hack = "0.5.3"
 
+[dev-dependencies]
+select-rustc = "0.1"
+trybuild = "1.0"
+
 [workspace]
-members = ["impl", "tests", "unindent"]
+members = ["impl", "unindent"]
 
 [badges]
 travis-ci = { repository = "dtolnay/indoc" }

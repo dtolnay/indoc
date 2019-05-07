@@ -10,7 +10,7 @@ matrix:
       name: Stable compiletest
     - rust: nightly
       name: Unstable compiletest
-      env: FEATURES="unstable" TEST_FEATURES="unstable"
+      env: FEATURES="unstable"
     - rust: nightly
       name: Minimal versions
       before_script:
@@ -18,7 +18,4 @@ matrix:
 
 script:
   - cargo build --features "${FEATURES:-}"
-  - cargo clean
   - cargo test --features "${FEATURES:-}"
-  - cargo clean
-  - cargo test --features "${TEST_FEATURES:-}" --manifest-path tests/Cargo.toml

@@ -13,8 +13,8 @@ matrix:
       env: FEATURES="unstable"
     - rust: nightly
       name: Minimal versions
-      before_script:
-        - cargo update -Z minimal-versions
+      before_script: cargo update -Z minimal-versions
+      script: cargo check
 
 script:
   - cargo build --features "${FEATURES:-}"

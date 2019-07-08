@@ -6,7 +6,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[rustc::attr(not(nightly), ignore)]
+#[rustversion::attr(not(nightly), ignore)]
 #[test]
 fn ui() {
     let t = trybuild::TestCases::new();

@@ -14,10 +14,12 @@
 //!
 //! [`indoc`]: https://github.com/dtolnay/indoc
 //!
-//! This crate exposes two functions:
+//! This crate exposes two functions and two traits:
 //!
 //! - `unindent(&str) -> String`
 //! - `unindent_bytes(&[u8]) -> Vec<u8>`
+//! - `Unindent`
+//! - `UnindentBytes`
 //!
 //! ```
 //! use unindent::unindent;
@@ -29,6 +31,20 @@
 //!     assert_eq!("line one\nline two", unindent(indented));
 //! }
 //! ```
+//!
+//! `Unindent` and  `UnindentBytes` traits expose the same functionality as extension functions.
+//!
+//! ```
+//! use unindent::Unindent;
+//!
+//! fn main() {
+//!     let indented = format!("
+//!             line {}
+//!             line {}", "one", "two");
+//!     assert_eq!("line one\nline two", indented.unindent());
+//! }
+//! ```
+//!
 
 #![cfg_attr(feature = "cargo-clippy", allow(type_complexity))]
 
@@ -72,6 +88,26 @@ pub fn unindent_bytes(s: &[u8]) -> Vec<u8> {
         }
     }
     result
+}
+
+pub trait Unindent {
+    fn unindent(&self) -> String;
+}
+
+impl<S: AsRef<str>> Unindent for S {
+    fn unindent(&self) -> String {
+        unindent(self.as_ref())
+    }
+}
+
+pub trait UnindentBytes {
+    fn unindent_bytes(&self) -> Vec<u8>;
+}
+
+impl UnindentBytes for [u8] {
+    fn unindent_bytes(&self) -> Vec<u8> {
+        unindent_bytes(self.as_ref())
+    }
 }
 
 // Number of leading spaces in the line, or None if the line is entirely spaces.
@@ -118,5 +154,26 @@ impl<'a> Iterator for Lines<'a> {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn unindent_as_extension_function() {
+        let indented = "
+            line one
+            line two";
+        assert_eq!(indented.unindent(), "line one\nline two");
+    }
+
+    #[test]
+    fn unindent_bytes_as_extension_function() {
+        let indented = b"
+            line one
+            line two";
+        assert_eq!(indented.unindent_bytes(), b"line one\nline two");
     }
 }

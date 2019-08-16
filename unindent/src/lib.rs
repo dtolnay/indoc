@@ -14,12 +14,11 @@
 //!
 //! [`indoc`]: https://github.com/dtolnay/indoc
 //!
-//! This crate exposes two functions and two traits:
+//! This crate exposes two functions and a trait:
 //!
 //! - `unindent(&str) -> String`
 //! - `unindent_bytes(&[u8]) -> Vec<u8>`
 //! - `Unindent`
-//! - `UnindentBytes`
 //!
 //! ```
 //! use unindent::unindent;
@@ -32,7 +31,7 @@
 //! }
 //! ```
 //!
-//! `Unindent` and  `UnindentBytes` traits expose the same functionality as extension functions.
+//! `Unindent` trait expose the same functionality as extension functions.
 //!
 //! ```
 //! use unindent::Unindent;
@@ -91,21 +90,23 @@ pub fn unindent_bytes(s: &[u8]) -> Vec<u8> {
 }
 
 pub trait Unindent {
-    fn unindent(&self) -> String;
+    type Output;
+
+    fn unindent(&self) -> Self::Output;
 }
 
 impl<S: AsRef<str>> Unindent for S {
-    fn unindent(&self) -> String {
+    type Output = String;
+
+    fn unindent(&self) -> Self::Output {
         unindent(self.as_ref())
     }
 }
 
-pub trait UnindentBytes {
-    fn unindent_bytes(&self) -> Vec<u8>;
-}
+impl Unindent for [u8] {
+    type Output = Vec<u8>;
 
-impl UnindentBytes for [u8] {
-    fn unindent_bytes(&self) -> Vec<u8> {
+    fn unindent(&self) -> Self::Output {
         unindent_bytes(self.as_ref())
     }
 }
@@ -166,7 +167,7 @@ mod test {
         let indented = "
             line one
             line two";
-        assert_eq!(indented.unindent(), "line one\nline two");
+        assert_eq!("line one\nline two", indented.unindent());
     }
 
     #[test]
@@ -174,6 +175,6 @@ mod test {
         let indented = b"
             line one
             line two";
-        assert_eq!(indented.unindent_bytes(), b"line one\nline two");
+        assert_eq!(b"line one\nline two", indented.unindent().as_slice());
     }
 }

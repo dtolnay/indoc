@@ -1,6 +1,6 @@
 [package]
 name = "indoc"
-version = "0.3.3"
+version = "0.3.4"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "Indented document literals"
@@ -14,8 +14,8 @@ edition = "2018"
 unstable = ["indoc-impl/unstable"]
 
 [dependencies]
-indoc-impl = { version = "=0.3.3", path = "impl" }
-proc-macro-hack = "0.5.3"
+indoc-impl = { version = "=0.3.4", path = "impl" }
+proc-macro-hack = "0.5.9"
 
 [dev-dependencies]
 rustversion = "0.1"

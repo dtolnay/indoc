@@ -14,11 +14,11 @@
 //!
 //! [`indoc`]: https://github.com/dtolnay/indoc
 //!
-//! This crate exposes two functions and a trait:
+//! This crate exposes two unindent functions and an extension trait:
 //!
-//! - `unindent(&str) -> String`
-//! - `unindent_bytes(&[u8]) -> Vec<u8>`
-//! - `Unindent`
+//! - `fn unindent(&str) -> String`
+//! - `fn unindent_bytes(&[u8]) -> Vec<u8>`
+//! - `trait Unindent`
 //!
 //! ```
 //! use unindent::unindent;
@@ -31,7 +31,8 @@
 //! }
 //! ```
 //!
-//! `Unindent` trait expose the same functionality as extension functions.
+//! The `Unindent` extension trait expose the same functionality under an
+//! extension method.
 //!
 //! ```
 //! use unindent::Unindent;
@@ -43,7 +44,6 @@
 //!     assert_eq!("line one\nline two", indented.unindent());
 //! }
 //! ```
-//!
 
 #![cfg_attr(feature = "cargo-clippy", allow(type_complexity))]
 
@@ -95,11 +95,19 @@ pub trait Unindent {
     fn unindent(&self) -> Self::Output;
 }
 
-impl<S: AsRef<str>> Unindent for S {
+impl Unindent for str {
     type Output = String;
 
     fn unindent(&self) -> Self::Output {
-        unindent(self.as_ref())
+        unindent(self)
+    }
+}
+
+impl Unindent for String {
+    type Output = String;
+
+    fn unindent(&self) -> Self::Output {
+        unindent(self)
     }
 }
 
@@ -107,7 +115,15 @@ impl Unindent for [u8] {
     type Output = Vec<u8>;
 
     fn unindent(&self) -> Self::Output {
-        unindent_bytes(self.as_ref())
+        unindent_bytes(self)
+    }
+}
+
+impl<'a, T: ?Sized + Unindent> Unindent for &'a T {
+    type Output = T::Output;
+
+    fn unindent(&self) -> Self::Output {
+        (**self).unindent()
     }
 }
 
@@ -163,18 +179,34 @@ mod test {
     use super::*;
 
     #[test]
-    fn unindent_as_extension_function() {
-        let indented = "
+    fn fn_unindent_str() {
+        let s = "
             line one
             line two";
-        assert_eq!("line one\nline two", indented.unindent());
+        assert_eq!(unindent(s), "line one\nline two");
     }
 
     #[test]
-    fn unindent_bytes_as_extension_function() {
-        let indented = b"
+    fn fn_unindent_bytes() {
+        let b = b"
             line one
             line two";
-        assert_eq!(b"line one\nline two", indented.unindent().as_slice());
+        assert_eq!(unindent_bytes(b), b"line one\nline two");
+    }
+
+    #[test]
+    fn trait_unindent_str() {
+        let s = "
+            line one
+            line two";
+        assert_eq!(s.unindent(), "line one\nline two");
+    }
+
+    #[test]
+    fn trait_unindent_bytes() {
+        let b = b"
+            line one
+            line two";
+        assert_eq!(b.unindent(), b"line one\nline two");
     }
 }

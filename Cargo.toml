@@ -18,7 +18,7 @@ indoc-impl = { version = "=0.3.4", path = "impl" }
 proc-macro-hack = "0.5.3"
 
 [dev-dependencies]
-rustversion = "0.1"
+rustversion = "1.0"
 trybuild = "1.0"
 
 [workspace]

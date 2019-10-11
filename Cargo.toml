@@ -15,7 +15,7 @@ unstable = ["indoc-impl/unstable"]
 
 [dependencies]
 indoc-impl = { version = "=0.3.4", path = "impl" }
-proc-macro-hack = "0.5.3"
+proc-macro-hack = "0.5.10"
 
 [dev-dependencies]
 rustversion = "1.0"

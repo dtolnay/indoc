@@ -3,7 +3,7 @@ language: rust
 
 matrix:
   include:
-    - rust: 1.31.0
+    - rust: 1.36.0
     - rust: stable
     - rust: beta
     - rust: nightly
@@ -14,6 +14,8 @@ matrix:
     - rust: nightly
       name: Minimal versions
       before_script: cargo update -Z minimal-versions
+      script: cargo check
+    - rust: 1.31.0
       script: cargo check
 
 script:

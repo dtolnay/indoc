@@ -25,3 +25,6 @@ unindent = { version = "0.1.3", path = "../unindent" }
 
 [badges]
 travis-ci = { repository = "dtolnay/indoc" }
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]

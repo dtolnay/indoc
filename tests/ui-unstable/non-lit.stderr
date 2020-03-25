@@ -1,7 +1,7 @@
-error: proc macro panicked
+error: argument must be a single string literal
  --> $DIR/non-lit.rs:6:5
   |
 6 |     indoc!(fail);
   |     ^^^^^^^^^^^^^
   |
-  = help: message: argument must be a single string literal
+  = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)

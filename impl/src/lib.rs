@@ -3,28 +3,43 @@ extern crate proc_macro;
 #[cfg(not(feature = "unstable"))]
 use proc_macro_hack::proc_macro_hack;
 
-use proc_macro2::TokenStream;
+use proc_macro2::{Span, TokenStream};
 use quote::quote;
-use syn::{Lit, LitByteStr, LitStr};
+use syn::{Error, Lit, LitByteStr, LitStr, Result};
 use unindent::*;
 
 #[cfg_attr(feature = "unstable", proc_macro)]
 #[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
 pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let source = TokenStream::from(input);
+    let input = TokenStream::from(input);
 
-    let len = source.clone().into_iter().count();
+    let unindented = match try_indoc(input) {
+        Ok(tokens) => tokens,
+        Err(err) => err.to_compile_error(),
+    };
+
+    proc_macro::TokenStream::from(unindented)
+}
+
+fn try_indoc(input: TokenStream) -> Result<TokenStream> {
+    let len = input.clone().into_iter().count();
     if len != 1 {
-        panic!(
-            "argument must be a single string literal, but got {} tokens",
-            len
-        );
+        return Err(Error::new(
+            Span::call_site(),
+            format!(
+                "argument must be a single string literal, but got {} tokens",
+                len,
+            ),
+        ));
     }
 
-    let lit = match syn::parse2::<Lit>(source) {
+    let lit = match syn::parse2::<Lit>(input) {
         Ok(lit) => lit,
         Err(_) => {
-            panic!("argument must be a single string literal");
+            return Err(Error::new(
+                Span::call_site(),
+                "argument must be a single string literal",
+            ));
         }
     };
 
@@ -38,9 +53,12 @@ pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
             Lit::ByteStr(LitByteStr::new(&v, lit.span()))
         }
         _ => {
-            panic!("argument must be a single string literal");
+            return Err(Error::new(
+                Span::call_site(),
+                "argument must be a single string literal",
+            ));
         }
     };
 
-    proc_macro::TokenStream::from(quote!(#lit))
+    Ok(quote!(#lit))
 }

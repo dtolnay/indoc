@@ -1,8 +1,7 @@
-error: proc-macro derive panicked
+error: argument must be a single string literal
  --> $DIR/non-string.rs:4:5
   |
 4 |     indoc!(64);
   |     ^^^^^^^^^^^
   |
-  = help: message: argument must be a single string literal
   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)

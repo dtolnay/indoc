@@ -1,4 +1,4 @@
-error: proc-macro derive panicked
+error: argument must be a single string literal, but got 2 tokens
  --> $DIR/two-arguments.rs:4:5
   |
 4 | /     indoc!("
@@ -8,5 +8,4 @@ error: proc-macro derive panicked
 8 | |         " 64);
   | |______________^
   |
-  = help: message: argument must be a single string literal, but got 2 tokens
   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)

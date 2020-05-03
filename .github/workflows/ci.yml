@@ -1,0 +1,45 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  schedule: [cron: "40 1 * * *"]
+
+jobs:
+  test:
+    name: ${{matrix.name || format('Rust {0}', matrix.rust)}}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [beta, stable, 1.36.0]
+        include:
+          - name: Stable compiletest
+            rust: nightly
+          - name: Unstable compiletest
+            rust: nightly
+            features: unstable
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{matrix.rust}}
+      - run: cargo build --features "${{matrix.features}}"
+      - run: cargo test --features "${{matrix.features}}"
+
+  msrv:
+    name: Rust 1.31.0
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dtolnay/rust-toolchain@1.31.0
+      - run: cargo check
+
+  minimal:
+    name: Minimal versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dtolnay/rust-toolchain@nightly
+      - run: cargo update -Z minimal-versions
+      - run: cargo check

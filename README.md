@@ -1,7 +1,7 @@
 Indented Documents (indoc)
 ==========================
 
-[![Build Status](https://api.travis-ci.org/dtolnay/indoc.svg?branch=master)](https://travis-ci.org/dtolnay/indoc)
+[![Build Status](https://img.shields.io/github/workflow/status/dtolnay/indoc/CI/master)](https://github.com/dtolnay/indoc/actions?query=branch%3Amaster)
 [![Latest Version](https://img.shields.io/crates/v/indoc.svg)](https://crates.io/crates/indoc)
 
 This crate provides a procedural macro for indented string literals. The

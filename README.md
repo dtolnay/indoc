@@ -68,6 +68,35 @@ fn main() {
 }
 ```
 
+`indoc` also exports two `format`-like macros - `formatdoc`, which work exactly like `format` and generates the unindented formatted string, and `printdoc`, which prints the unindented formatted string to the standard output:
+
+```rust
+use indoc::formatdoc;
+
+fn main() {
+    let testing = formatdoc!("
+        {}\
+        {}
+        {}\
+          {}
+        {}", 'a', 'b', 'c', 'd', 'e');
+    let expected = "ab\ncd\ne";
+    assert_eq!(testing, expected);
+}
+```
+Note that these macros, just like `format` and `print`, do not support binary strings. Also, the format string is unindented and not the formatted one:
+```rust
+use indoc::formatdoc;
+
+fn main() {
+    let testing = formatdoc!("\
+        {}", " a");
+    let expected = " a";
+    // The leading space in the substitution is preserved.
+    assert_eq!(testing, expected);
+}
+```
+
 ## Explanation
 
 The following rules characterize the behavior of the `indoc!()` macro:

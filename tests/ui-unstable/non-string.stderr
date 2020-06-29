@@ -1,7 +1,5 @@
 error: argument must be a single string literal
- --> $DIR/non-string.rs:6:5
+ --> $DIR/non-string.rs:6:12
   |
 6 |     indoc!(64);
-  |     ^^^^^^^^^^^
-  |
-  = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+  |            ^^

@@ -124,8 +124,6 @@
 
 #![allow(clippy::needless_doctest_main)]
 
-extern crate proc_macro;
-
 use proc_macro2::{Span, TokenStream};
 use quote::quote;
 use syn::{Error, Lit, LitByteStr, LitStr, Result};

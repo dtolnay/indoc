@@ -1,7 +1,0 @@
-error: there is no argument named `named`
- --> $DIR/printdoc-no-named-arg.rs:4:16
-  |
-4 |     printdoc!("{named}");
-  |                ^^^^^^^
-  |
-  = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)

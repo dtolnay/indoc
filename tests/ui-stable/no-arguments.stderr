@@ -1,7 +1,0 @@
-error: argument must be a single string literal, but got 0 tokens
- --> $DIR/no-arguments.rs:4:5
-  |
-4 |     indoc!();
-  |     ^^^^^^^^^
-  |
-  = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)

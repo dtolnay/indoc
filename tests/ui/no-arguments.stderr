@@ -1,4 +1,4 @@
-error: argument must be a single string literal, but got 0 tokens
+error: unexpected end of macro invocation, expected format string
  --> $DIR/no-arguments.rs:4:5
   |
 4 |     indoc!();

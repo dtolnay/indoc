@@ -124,62 +124,76 @@
 
 #![allow(clippy::needless_doctest_main)]
 
-use proc_macro2::{Span, TokenStream};
+use proc_macro2::{Span, TokenStream, TokenTree};
 use quote::quote;
-use syn::{Error, Lit, LitByteStr, LitStr, Result};
+use syn::{Error, Ident, Lit, LitByteStr, LitStr, Result};
 use unindent::*;
+
+#[derive(Copy, Clone, PartialEq)]
+enum Macro {
+    Indoc,
+    Format,
+    Print,
+}
 
 #[proc_macro]
 pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let input = TokenStream::from(input);
-
-    let unindented = match try_indoc(input) {
-        Ok(tokens) => tokens,
-        Err(err) => err.to_compile_error(),
-    };
-
-    proc_macro::TokenStream::from(unindented)
+    expand(input, Macro::Indoc)
 }
 
 #[proc_macro]
 pub fn formatdoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let input = TokenStream::from(input);
-
-    let format = match format_indoc(input, "format") {
-        Ok(tokens) => tokens,
-        Err(err) => err.to_compile_error(),
-    };
-
-    proc_macro::TokenStream::from(format)
+    expand(input, Macro::Format)
 }
 
 #[proc_macro]
 pub fn printdoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let input = TokenStream::from(input);
+    expand(input, Macro::Print)
+}
 
-    let format = match format_indoc(input, "print") {
+fn expand(input: proc_macro::TokenStream, mode: Macro) -> proc_macro::TokenStream {
+    let input = TokenStream::from(input);
+    let output = match try_expand(input, mode) {
         Ok(tokens) => tokens,
         Err(err) => err.to_compile_error(),
     };
-
-    proc_macro::TokenStream::from(format)
+    proc_macro::TokenStream::from(output)
 }
 
-fn try_indoc(input: TokenStream) -> Result<TokenStream> {
-    let len = input.clone().into_iter().count();
-    if len != 1 {
+fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
+    let mut input = input.into_iter();
+    let first = input.next().ok_or_else(|| {
+        Error::new(
+            Span::call_site(),
+            "unexpected end of macro invocation, expected format string",
+        )
+    })?;
+
+    let unindented_lit = lit_indoc(first, mode)?;
+
+    if mode == Macro::Indoc && input.next().is_some() {
         return Err(Error::new(
             Span::call_site(),
             format!(
                 "argument must be a single string literal, but got {} tokens",
-                len,
+                2 + input.count(),
             ),
         ));
     }
-    lit_indoc(input, true)
+
+    let macro_name = match mode {
+        Macro::Indoc => return Ok(quote!(#unindented_lit)),
+        Macro::Format => "format",
+        Macro::Print => "print",
+    };
+
+    let args: TokenStream = input.collect();
+    let macro_name = Ident::new(macro_name, Span::call_site());
+    Ok(quote!(#macro_name!(#unindented_lit #args)))
 }
 
-fn lit_indoc(input: TokenStream, raw: bool) -> Result<TokenStream> {
+fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Lit> {
+    let input = TokenStream::from(token);
     let lit = match syn::parse2::<Lit>(input) {
         Ok(lit) => lit,
         Err(err) => {
@@ -190,48 +204,25 @@ fn lit_indoc(input: TokenStream, raw: bool) -> Result<TokenStream> {
         }
     };
 
-    let lit = match lit {
+    match lit {
         Lit::Str(lit) => {
             let v = unindent(&lit.value());
-            Lit::Str(LitStr::new(&v, lit.span()))
+            Ok(Lit::Str(LitStr::new(&v, lit.span())))
         }
         Lit::ByteStr(lit) => {
-            if raw {
+            if mode == Macro::Indoc {
                 let v = unindent_bytes(&lit.value());
-                Lit::ByteStr(LitByteStr::new(&v, lit.span()))
+                Ok(Lit::ByteStr(LitByteStr::new(&v, lit.span())))
             } else {
-                return Err(Error::new(
+                Err(Error::new(
                     lit.span(),
                     "byte strings are not supported in formatting macros",
-                ));
+                ))
             }
         }
-        otherwise => {
-            return Err(Error::new(
-                otherwise.span(),
-                "argument must be a single string literal",
-            ));
-        }
-    };
-
-    Ok(quote!(#lit))
-}
-
-fn format_indoc(input: TokenStream, macro_name: &str) -> Result<TokenStream> {
-    let macro_name = syn::Ident::new(macro_name, Span::call_site());
-
-    let mut input = input.into_iter();
-
-    let first = std::iter::once(input.next().ok_or_else(|| {
-        Error::new(
-            Span::call_site(),
-            "unexpected end of macro invocation, expected format string",
-        )
-    })?)
-    .collect();
-    let fmt_str = lit_indoc(first, false)?;
-
-    let args: TokenStream = input.collect();
-
-    Ok(quote!(#macro_name!(#fmt_str #args)))
+        _ => Err(Error::new(
+            lit.span(),
+            "argument must be a single string literal",
+        )),
+    }
 }

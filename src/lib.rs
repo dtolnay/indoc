@@ -172,14 +172,20 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
 
     let unindented_lit = lit_indoc(first, mode)?;
 
-    if mode == Macro::Indoc && input.next().is_some() {
-        return Err(Error::new(
-            Span::call_site(),
-            &format!(
-                "argument must be a single string literal, but got {} tokens",
-                2 + input.count(),
-            ),
-        ));
+    if mode == Macro::Indoc {
+        match input.next() {
+            Some(TokenTree::Punct(punct)) if punct.as_char() == ',' && input.next().is_none() => {}
+            None => {}
+            Some(_) => {
+                return Err(Error::new(
+                    Span::call_site(),
+                    &format!(
+                        "argument must be a single string literal, but got {} tokens",
+                        2 + input.count(),
+                    ),
+                ));
+            }
+        }
     }
 
     let macro_name = match mode {

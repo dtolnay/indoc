@@ -26,6 +26,17 @@ fn carriage_return() {
 }
 
 #[test]
+fn trailing_comma() {
+    let indoc = indoc! {
+        "
+        test
+        ",
+    };
+    let expected = "test\n";
+    assert_eq!(indoc, expected);
+}
+
+#[test]
 fn empty_string() {
     let indoc = indoc! {""};
     let expected = "";

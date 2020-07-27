@@ -7,28 +7,28 @@ Indented Documents (indoc)
 [<img alt="build status" src="https://img.shields.io/github/workflow/status/dtolnay/indoc/CI/master?style=for-the-badge" height="20">](https://github.com/dtolnay/indoc/actions?query=branch%3Amaster)
 
 This crate provides a procedural macro for indented string literals. The
-`indoc!()` macro takes a multiline string literal and un-indents it so the
-leftmost non-space character is in the first column.
+`indoc!()` macro takes a multiline string literal and un-indents it at compile
+time so the leftmost non-space character is in the first column.
 
 ```toml
 [dependencies]
 indoc = "0.3"
 ```
 
-Release notes are available under [GitHub releases](https://github.com/dtolnay/indoc/releases).
+<br>
 
-## Using Indoc
+## Using indoc
 
 ```rust
 use indoc::indoc;
 
 fn main() {
-    let testing = indoc!("
+    let testing = indoc! {"
         def hello():
             print('Hello, world!')
 
         hello()
-        ");
+    "};
     let expected = "def hello():\n    print('Hello, world!')\n\nhello()\n";
     assert_eq!(testing, expected);
 }
@@ -40,12 +40,12 @@ Indoc also works with raw string literals:
 use indoc::indoc;
 
 fn main() {
-    let testing = indoc!(r#"
+    let testing = indoc! {r#"
         def hello():
             print("Hello, world!")
 
         hello()
-        "#);
+    "#};
     let expected = "def hello():\n    print(\"Hello, world!\")\n\nhello()\n";
     assert_eq!(testing, expected);
 }
@@ -57,16 +57,44 @@ And byte string literals:
 use indoc::indoc;
 
 fn main() {
-    let testing = indoc!(b"
+    let testing = indoc! {b"
         def hello():
             print('Hello, world!')
 
         hello()
-        ");
+    "};
     let expected = b"def hello():\n    print('Hello, world!')\n\nhello()\n";
     assert_eq!(testing[..], expected[..]);
 }
 ```
+
+<br>
+
+## Formatting macros
+
+The indoc crate exports four additional macros to substitute conveniently for
+the standard library's formatting macros:
+
+- `formatdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `format!(indoc!($fmt), ...)`
+- `printdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `print!(indoc!($fmt), ...)`
+- `eprintdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `eprint!(indoc!($fmt), ...)`
+- `writedoc!($dest, $fmt, ...)`&ensp;&mdash;&ensp;equivalent to `write!($dest, indoc!($fmt), ...)`
+
+```rust
+use indoc::printdoc;
+
+fn main() {
+    printdoc! {"
+        GET {url}
+        Accept: {mime}
+        ",
+        url = "http://localhost:8080",
+        mime = "application/json",
+    }
+}
+```
+
+<br>
 
 ## Explanation
 
@@ -79,16 +107,7 @@ The following rules characterize the behavior of the `indoc!()` macro:
    first line.
 4. Remove the computed number of spaces from the beginning of each line.
 
-This means there are a few equivalent ways to format the same string, so choose
-one you like. All of the following result in the string `"line one\nline
-two\n"`:
-
-```
-indoc!("            /      indoc!(             /      indoc!("line one
-   line one        /         "line one        /               line two
-   line two       /           line two       /                ")
-   ")            /            ")            /
-```
+<br>
 
 ## Unindent
 

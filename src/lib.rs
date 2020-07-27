@@ -245,17 +245,21 @@ fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
 }
 
 fn require_empty_or_trailing_comma(input: &mut TokenIter) -> Result<()> {
-    let first = input.next();
-    let rest_count = input.count();
-    match first {
-        Some(TokenTree::Punct(punct)) if punct.as_char() == ',' && rest_count == 0 => Ok(()),
-        None => Ok(()),
-        Some(_) => Err(Error::new(
-            Span::call_site(),
-            &format!(
-                "argument must be a single string literal, but got {} tokens",
-                2 + rest_count,
-            ),
-        )),
-    }
+    let first = match input.next() {
+        Some(TokenTree::Punct(punct)) if punct.as_char() == ',' => match input.next() {
+            Some(second) => second,
+            None => return Ok(()),
+        },
+        Some(first) => first,
+        None => return Ok(()),
+    };
+    let last = input.last();
+
+    let begin_span = first.span();
+    let end_span = last.as_ref().map_or(begin_span, TokenTree::span);
+    let msg = format!(
+        "unexpected {token} in macro invocation; indoc argument must be a single string literal",
+        token = if last.is_some() { "tokens" } else { "token" }
+    );
+    Err(Error::new2(begin_span, end_span, &msg))
 }

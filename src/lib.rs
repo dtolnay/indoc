@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! indoc = "0.3"
+//! indoc = "1.0"
 //! ```
 //!
 //! <br>

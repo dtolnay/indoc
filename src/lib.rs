@@ -139,6 +139,7 @@ enum Macro {
     Format,
     Print,
     Eprint,
+    Write,
 }
 
 #[proc_macro]
@@ -159,6 +160,11 @@ pub fn printdoc(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn eprintdoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Eprint)
+}
+
+#[proc_macro]
+pub fn writedoc(input: TokenStream) -> TokenStream {
+    expand(input, Macro::Write)
 }
 
 fn expand(input: TokenStream, mode: Macro) -> TokenStream {
@@ -187,6 +193,7 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
         Macro::Format => "format",
         Macro::Print => "print",
         Macro::Eprint => "eprint",
+        Macro::Write => "write",
     };
 
     // #macro_name! { #unindented_lit #args }

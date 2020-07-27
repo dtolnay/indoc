@@ -122,7 +122,6 @@
 //!    ")            /            ")            /
 //! ```
 
-#![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 #![no_std]
 
 pub use indoc_impl::{formatdoc, indoc, printdoc};

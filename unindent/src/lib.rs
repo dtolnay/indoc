@@ -46,7 +46,7 @@
 //! ```
 
 #![doc(html_root_url = "https://docs.rs/unindent/0.1.6")]
-#![cfg_attr(feature = "cargo-clippy", allow(type_complexity))]
+#![allow(clippy::type_complexity)]
 
 use std::iter::Peekable;
 use std::slice::Split;

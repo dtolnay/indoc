@@ -1,15 +1,11 @@
 extern crate proc_macro;
 
-#[cfg(not(feature = "unstable"))]
-use proc_macro_hack::proc_macro_hack;
-
 use proc_macro2::{Span, TokenStream};
 use quote::quote;
 use syn::{Error, Lit, LitByteStr, LitStr, Result};
 use unindent::*;
 
-#[cfg_attr(feature = "unstable", proc_macro)]
-#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
+#[proc_macro]
 pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = TokenStream::from(input);
 
@@ -21,8 +17,7 @@ pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     proc_macro::TokenStream::from(unindented)
 }
 
-#[cfg_attr(feature = "unstable", proc_macro)]
-#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
+#[proc_macro]
 pub fn formatdoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = TokenStream::from(input);
 
@@ -34,8 +29,7 @@ pub fn formatdoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     proc_macro::TokenStream::from(format)
 }
 
-#[cfg_attr(feature = "unstable", proc_macro)]
-#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
+#[proc_macro]
 pub fn printdoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = TokenStream::from(input);
 

@@ -134,14 +134,4 @@
 #![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 #![no_std]
 
-#[cfg(not(feature = "unstable"))]
-use proc_macro_hack::proc_macro_hack;
-
-#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
-pub use indoc_impl::indoc;
-
-#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
-pub use indoc_impl::formatdoc;
-
-#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
-pub use indoc_impl::printdoc;
+pub use indoc_impl::{formatdoc, indoc, printdoc};

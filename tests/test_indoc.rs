@@ -149,3 +149,18 @@ fn indoc_as_format_string() {
     let s = format!(indoc! {"{}"}, true);
     assert_eq!(s, "true");
 }
+
+#[test]
+fn test_metavariable() {
+    macro_rules! indoc_wrapper {
+        ($e:expr) => {
+            indoc!($e)
+        };
+    }
+
+    let indoc = indoc_wrapper! {"
+        macros, how do they work
+    "};
+    let expected = "macros, how do they work\n";
+    assert_eq!(indoc, expected);
+}

@@ -323,6 +323,7 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
 
 fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
     let repr = token.to_string();
+    let repr = repr.trim();
     let is_string = repr.starts_with('"') || repr.starts_with('r');
     let is_byte_string = repr.starts_with("b\"") || repr.starts_with("br");
 

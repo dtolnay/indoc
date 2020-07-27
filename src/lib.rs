@@ -123,5 +123,6 @@
 //! ```
 
 #![no_std]
+#![allow(clippy::needless_doctest_main)]
 
 pub use indoc_impl::{formatdoc, indoc, printdoc};

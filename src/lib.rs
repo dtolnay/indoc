@@ -245,14 +245,16 @@ fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
 }
 
 fn require_empty_or_trailing_comma(input: &mut TokenIter) -> Result<()> {
-    match input.next() {
-        Some(TokenTree::Punct(punct)) if punct.as_char() == ',' && input.next().is_none() => Ok(()),
+    let first = input.next();
+    let rest_count = input.count();
+    match first {
+        Some(TokenTree::Punct(punct)) if punct.as_char() == ',' && rest_count == 0 => Ok(()),
         None => Ok(()),
         Some(_) => Err(Error::new(
             Span::call_site(),
             &format!(
                 "argument must be a single string literal, but got {} tokens",
-                2 + input.count(),
+                2 + rest_count,
             ),
         )),
     }

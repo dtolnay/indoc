@@ -124,10 +124,10 @@
 
 #![allow(clippy::needless_doctest_main)]
 
-use proc_macro2::{Literal, Span, TokenStream, TokenTree};
-use quote::quote;
+use proc_macro2::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
+use std::iter::{self, FromIterator};
 use std::str::FromStr;
-use syn::{Error, Ident, Result};
+use syn::{Error, Result};
 use unindent::unindent;
 
 #[derive(Copy, Clone, PartialEq)]
@@ -183,14 +183,22 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
     }
 
     let macro_name = match mode {
-        Macro::Indoc => return Ok(quote!(#unindented_lit)),
+        Macro::Indoc => return Ok(TokenStream::from(TokenTree::Literal(unindented_lit))),
         Macro::Format => "format",
         Macro::Print => "print",
     };
 
-    let args: TokenStream = input.collect();
-    let macro_name = Ident::new(macro_name, Span::call_site());
-    Ok(quote!(#macro_name!(#unindented_lit #args)))
+    // #macro_name! { #unindented_lit #args }
+    Ok(TokenStream::from_iter(vec![
+        TokenTree::Ident(Ident::new(macro_name, Span::call_site())),
+        TokenTree::Punct(Punct::new('!', Spacing::Alone)),
+        TokenTree::Group(Group::new(
+            Delimiter::Brace,
+            iter::once(TokenTree::Literal(unindented_lit))
+                .chain(input)
+                .collect(),
+        )),
+    ]))
 }
 
 fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {

@@ -7,28 +7,28 @@
 //! <br>
 //!
 //! This crate provides a procedural macro for indented string literals. The
-//! `indoc!()` macro takes a multiline string literal and un-indents it so the
-//! leftmost non-space character is in the first column.
+//! `indoc!()` macro takes a multiline string literal and un-indents it at
+//! compile time so the leftmost non-space character is in the first column.
 //!
 //! ```toml
 //! [dependencies]
 //! indoc = "0.3"
 //! ```
 //!
-//! Release notes are available under [GitHub releases](https://github.com/dtolnay/indoc/releases).
+//! <br>
 //!
-//! # Using Indoc
+//! # Using indoc
 //!
 //! ```
 //! use indoc::indoc;
 //!
 //! fn main() {
-//!     let testing = indoc!("
+//!     let testing = indoc! {"
 //!         def hello():
 //!             print('Hello, world!')
 //!
 //!         hello()
-//!         ");
+//!     "};
 //!     let expected = "def hello():\n    print('Hello, world!')\n\nhello()\n";
 //!     assert_eq!(testing, expected);
 //! }
@@ -40,12 +40,12 @@
 //! use indoc::indoc;
 //!
 //! fn main() {
-//!     let testing = indoc!(r#"
+//!     let testing = indoc! {r#"
 //!         def hello():
 //!             print("Hello, world!")
 //!
 //!         hello()
-//!         "#);
+//!     "#};
 //!     let expected = "def hello():\n    print(\"Hello, world!\")\n\nhello()\n";
 //!     assert_eq!(testing, expected);
 //! }
@@ -57,70 +57,55 @@
 //! use indoc::indoc;
 //!
 //! fn main() {
-//!     let testing = indoc!(b"
+//!     let testing = indoc! {b"
 //!         def hello():
 //!             print('Hello, world!')
 //!
 //!         hello()
-//!         ");
+//!     "};
 //!     let expected = b"def hello():\n    print('Hello, world!')\n\nhello()\n";
 //!     assert_eq!(testing[..], expected[..]);
 //! }
 //! ```
 //!
-//! `indoc` also exports two `format`-like macros - `formatdoc`, which work exactly
-//! like `format` and generates the unindented formatted string, and `printdoc`,
-//! which prints the unindented formatted string to the standard output:
+//! <br><br>
+//!
+//! # Formatting macros
+//!
+//! The indoc crate exports four additional macros to substitute conveniently
+//! for the standard library's formatting macros:
+//!
+//! - `formatdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `format!(indoc!($fmt), ...)`
+//! - `printdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `print!(indoc!($fmt), ...)`
+//! - `eprintdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `eprint!(indoc!($fmt), ...)`
+//! - `writedoc!($dest, $fmt, ...)`&ensp;&mdash;&ensp;equivalent to `write!($dest, indoc!($fmt), ...)`
 //!
 //! ```
-//! use indoc::formatdoc;
-//!
-//! fn main() {
-//!     let testing = formatdoc!("
-//!         {}\
-//!         {}
-//!         {}\
-//!           {}
-//!         {}", 'a', 'b', 'c', 'd', 'e');
-//!     let expected = "ab\ncd\ne";
-//!     assert_eq!(testing, expected);
-//! }
-//! ```
-//! Note that these macros, just like `format` and `print`, do not support binary
-//! strings. Also, the format string is unindented and not the formatted one:
-//! ```
-//! use indoc::formatdoc;
+//! use indoc::printdoc;
 //!
 //! fn main() {
-//!     let testing = formatdoc!("\
-//!         {}", " a");
-//!     let expected = " a";
-//!     // The leading space in the substitution is preserved.
-//!     assert_eq!(testing, expected);
+//!     printdoc! {"
+//!         GET {url}
+//!         Accept: {mime}
+//!         ",
+//!         url = "http://localhost:8080",
+//!         mime = "application/json",
+//!     }
 //! }
 //! ```
+//!
+//! <br><br>
 //!
 //! # Explanation
 //!
 //! The following rules characterize the behavior of the `indoc!()` macro:
 //!
-//! 1. Count the leading spaces of each line, ignoring the first line and any lines
-//!    that are empty or contain spaces only.
+//! 1. Count the leading spaces of each line, ignoring the first line and any
+//!    lines that are empty or contain spaces only.
 //! 2. Take the minimum.
-//! 3. If the first line is empty i.e. the string begins with a newline, remove the
-//!    first line.
+//! 3. If the first line is empty i.e. the string begins with a newline, remove
+//!    the first line.
 //! 4. Remove the computed number of spaces from the beginning of each line.
-//!
-//! This means there are a few equivalent ways to format the same string, so choose
-//! one you like. All of the following result in the string `"line one\nline
-//! two\n"`:
-//!
-//! ```text
-//! indoc!("            /      indoc!(             /      indoc!("line one
-//!    line one        /         "line one        /               line two
-//!    line two       /           line two       /                ")
-//!    ")            /            ")            /
-//! ```
 
 #![allow(clippy::needless_doctest_main)]
 

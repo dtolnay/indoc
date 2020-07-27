@@ -124,10 +124,11 @@
 
 #![allow(clippy::needless_doctest_main)]
 
-use proc_macro2::{Span, TokenStream, TokenTree};
+use proc_macro2::{Literal, Span, TokenStream, TokenTree};
 use quote::quote;
-use syn::{Error, Ident, Lit, LitByteStr, LitStr, Result};
-use unindent::*;
+use std::str::FromStr;
+use syn::{Error, Ident, Result};
+use unindent::unindent;
 
 #[derive(Copy, Clone, PartialEq)]
 enum Macro {
@@ -192,37 +193,44 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
     Ok(quote!(#macro_name!(#unindented_lit #args)))
 }
 
-fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Lit> {
-    let input = TokenStream::from(token);
-    let lit = match syn::parse2::<Lit>(input) {
-        Ok(lit) => lit,
-        Err(err) => {
-            return Err(Error::new(
-                err.span(),
-                "argument must be a single string literal",
-            ));
-        }
-    };
+fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
+    let repr = token.to_string();
+    let is_string = repr.starts_with('"') || repr.starts_with('r');
+    let is_byte_string = repr.starts_with("b\"") || repr.starts_with("br");
 
-    match lit {
-        Lit::Str(lit) => {
-            let v = unindent(&lit.value());
-            Ok(Lit::Str(LitStr::new(&v, lit.span())))
-        }
-        Lit::ByteStr(lit) => {
-            if mode == Macro::Indoc {
-                let v = unindent_bytes(&lit.value());
-                Ok(Lit::ByteStr(LitByteStr::new(&v, lit.span())))
-            } else {
-                Err(Error::new(
-                    lit.span(),
-                    "byte strings are not supported in formatting macros",
-                ))
-            }
-        }
-        _ => Err(Error::new(
-            lit.span(),
+    if !is_string && !is_byte_string {
+        return Err(Error::new(
+            token.span(),
             "argument must be a single string literal",
-        )),
+        ));
+    }
+
+    if is_byte_string && mode != Macro::Indoc {
+        return Err(Error::new(
+            token.span(),
+            "byte strings are not supported in formatting macros",
+        ));
+    }
+
+    let begin = repr.find('"').unwrap() + 1;
+    let end = repr.rfind('"').unwrap();
+    let repr = format!(
+        "{open}{content}{close}",
+        open = &repr[..begin],
+        content = unindent(&repr[begin..end]),
+        close = &repr[end..],
+    );
+
+    match TokenStream::from_str(&repr)
+        .unwrap()
+        .into_iter()
+        .next()
+        .unwrap()
+    {
+        TokenTree::Literal(mut lit) => {
+            lit.set_span(token.span());
+            Ok(lit)
+        }
+        _ => unreachable!(),
     }
 }

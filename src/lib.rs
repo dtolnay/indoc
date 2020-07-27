@@ -129,26 +129,141 @@ enum Macro {
     Write,
 }
 
+/// Unindent and produce `&'static str`.
+///
+/// # Example
+///
+/// ```
+/// # use indoc::indoc;
+/// #
+/// // The type of `program` is &'static str
+/// let program = indoc! {"
+///     def hello():
+///         print('Hello, world!')
+///
+///     hello()
+/// "};
+/// print!("{}", program);
+/// ```
+///
+/// ```text
+/// def hello():
+///     print('Hello, world!')
+///
+/// hello()
+/// ```
 #[proc_macro]
 pub fn indoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Indoc)
 }
 
+/// Unindent and call `format!`.
+///
+/// Argument syntax is the same as for [`std::format!`].
+///
+/// # Example
+///
+/// ```
+/// # use indoc::formatdoc;
+/// #
+/// let request = formatdoc! {"
+///     GET {url}
+///     Accept: {mime}
+///     ",
+///     url = "http://localhost:8080",
+///     mime = "application/json",
+/// };
+/// println!("{}", request);
+/// ```
+///
+/// ```text
+/// GET http://localhost:8080
+/// Accept: application/json
+/// ```
 #[proc_macro]
 pub fn formatdoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Format)
 }
 
+/// Unindent and call `print!`.
+///
+/// Argument syntax is the same as for [`std::print!`].
+///
+/// # Example
+///
+/// ```
+/// # use indoc::printdoc;
+/// #
+/// printdoc! {"
+///     GET {url}
+///     Accept: {mime}
+///     ",
+///     url = "http://localhost:8080",
+///     mime = "application/json",
+/// }
+/// ```
+///
+/// ```text
+/// GET http://localhost:8080
+/// Accept: application/json
+/// ```
 #[proc_macro]
 pub fn printdoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Print)
 }
 
+/// Unindent and call `eprint!`.
+///
+/// Argument syntax is the same as for [`std::eprint!`].
+///
+/// # Example
+///
+/// ```
+/// # use indoc::eprintdoc;
+/// #
+/// eprintdoc! {"
+///     GET {url}
+///     Accept: {mime}
+///     ",
+///     url = "http://localhost:8080",
+///     mime = "application/json",
+/// }
+/// ```
+///
+/// ```text
+/// GET http://localhost:8080
+/// Accept: application/json
+/// ```
 #[proc_macro]
 pub fn eprintdoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Eprint)
 }
 
+/// Unindent and call `write!`.
+///
+/// Argument syntax is the same as for [`std::write!`].
+///
+/// # Example
+///
+/// ```
+/// # use indoc::writedoc;
+/// # use std::io::Write;
+/// #
+/// let _ = writedoc!(
+///     std::io::stdout(),
+///     "
+///         GET {url}
+///         Accept: {mime}
+///     ",
+///     url = "http://localhost:8080",
+///     mime = "application/json",
+/// );
+/// ```
+///
+/// ```text
+/// GET http://localhost:8080
+/// Accept: application/json
+/// ```
 #[proc_macro]
 pub fn writedoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Write)

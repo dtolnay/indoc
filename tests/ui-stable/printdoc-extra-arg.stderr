@@ -1,0 +1,9 @@
+error: argument never used
+ --> $DIR/printdoc-extra-arg.rs:4:19
+  |
+4 |     printdoc!("", 0);
+  |               --  ^ argument never used
+  |               |
+  |               formatting specifier missing
+  |
+  = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)

@@ -74,6 +74,40 @@
 //! }
 //! ```
 //!
+//! `indoc` also exports two `format`-like macros - `formatdoc`, which work exactly
+//! like `format` and generates the unindented formatted string, and `printdoc`,
+//! which prints the unindented formatted string to the standard output:
+//!
+//! ```
+#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
+#![cfg_attr(feature = "unstable", doc = "")]
+//! use indoc::formatdoc;
+//!
+//! fn main() {
+//!     let testing = formatdoc!("
+//!         {}\
+//!         {}
+//!         {}\
+//!           {}
+//!         {}", 'a', 'b', 'c', 'd', 'e');
+//!     let expected = "ab\ncd\ne";
+//!     assert_eq!(testing, expected);
+//! }
+//! ```
+//! Note that these macros, just like `format` and `print`, do not support binary
+//! strings. Also, the format string is unindented and not the formatted one:
+//! ```
+//! use indoc::formatdoc;
+//!
+//! fn main() {
+//!     let testing = formatdoc!("\
+//!         {}", " a");
+//!     let expected = " a";
+//!     // The leading space in the substitution is preserved.
+//!     assert_eq!(testing, expected);
+//! }
+//! ```
+//!
 //! # Explanation
 //!
 //! The following rules characterize the behavior of the `indoc!()` macro:
@@ -105,3 +139,9 @@ use proc_macro_hack::proc_macro_hack;
 
 #[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
 pub use indoc_impl::indoc;
+
+#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
+pub use indoc_impl::formatdoc;
+
+#[cfg_attr(not(feature = "unstable"), proc_macro_hack)]
+pub use indoc_impl::printdoc;

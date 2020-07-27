@@ -127,6 +127,7 @@
 mod error;
 
 use crate::error::{Error, Result};
+use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 use std::iter::{self, FromIterator};
 use std::str::FromStr;
@@ -178,24 +179,11 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
 
     let unindented_lit = lit_indoc(first, mode)?;
 
-    if mode == Macro::Indoc {
-        match input.next() {
-            Some(TokenTree::Punct(punct)) if punct.as_char() == ',' && input.next().is_none() => {}
-            None => {}
-            Some(_) => {
-                return Err(Error::new(
-                    Span::call_site(),
-                    &format!(
-                        "argument must be a single string literal, but got {} tokens",
-                        2 + input.count(),
-                    ),
-                ));
-            }
-        }
-    }
-
     let macro_name = match mode {
-        Macro::Indoc => return Ok(TokenStream::from(TokenTree::Literal(unindented_lit))),
+        Macro::Indoc => {
+            require_empty_or_trailing_comma(&mut input)?;
+            return Ok(TokenStream::from(TokenTree::Literal(unindented_lit)));
+        }
         Macro::Format => "format",
         Macro::Print => "print",
         Macro::Eprint => "eprint",
@@ -253,5 +241,19 @@ fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
             Ok(lit)
         }
         _ => unreachable!(),
+    }
+}
+
+fn require_empty_or_trailing_comma(input: &mut TokenIter) -> Result<()> {
+    match input.next() {
+        Some(TokenTree::Punct(punct)) if punct.as_char() == ',' && input.next().is_none() => Ok(()),
+        None => Ok(()),
+        Some(_) => Err(Error::new(
+            Span::call_site(),
+            &format!(
+                "argument must be a single string literal, but got {} tokens",
+                2 + input.count(),
+            ),
+        )),
     }
 }

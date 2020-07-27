@@ -127,7 +127,7 @@
 mod error;
 
 use crate::error::{Error, Result};
-use proc_macro2::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
+use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 use std::iter::{self, FromIterator};
 use std::str::FromStr;
 use unindent::unindent;
@@ -140,27 +140,25 @@ enum Macro {
 }
 
 #[proc_macro]
-pub fn indoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+pub fn indoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Indoc)
 }
 
 #[proc_macro]
-pub fn formatdoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+pub fn formatdoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Format)
 }
 
 #[proc_macro]
-pub fn printdoc(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+pub fn printdoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Print)
 }
 
-fn expand(input: proc_macro::TokenStream, mode: Macro) -> proc_macro::TokenStream {
-    let input = TokenStream::from(input);
-    let output = match try_expand(input, mode) {
+fn expand(input: TokenStream, mode: Macro) -> TokenStream {
+    match try_expand(input, mode) {
         Ok(tokens) => tokens,
         Err(err) => err.to_compile_error(),
-    };
-    proc_macro::TokenStream::from(output)
+    }
 }
 
 fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {

@@ -124,10 +124,12 @@
 
 #![allow(clippy::needless_doctest_main)]
 
+mod error;
+
+use crate::error::{Error, Result};
 use proc_macro2::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 use std::iter::{self, FromIterator};
 use std::str::FromStr;
-use syn::{Error, Result};
 use unindent::unindent;
 
 #[derive(Copy, Clone, PartialEq)]
@@ -175,7 +177,7 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
     if mode == Macro::Indoc && input.next().is_some() {
         return Err(Error::new(
             Span::call_site(),
-            format!(
+            &format!(
                 "argument must be a single string literal, but got {} tokens",
                 2 + input.count(),
             ),

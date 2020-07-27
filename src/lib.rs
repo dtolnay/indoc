@@ -125,8 +125,10 @@
 #![allow(clippy::needless_doctest_main)]
 
 mod error;
+mod expr;
 
 use crate::error::{Error, Result};
+use crate::expr::Expr;
 use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 use std::iter::{self, FromIterator};
@@ -176,6 +178,13 @@ fn expand(input: TokenStream, mode: Macro) -> TokenStream {
 
 fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
     let mut input = input.into_iter();
+
+    let prefix = if mode == Macro::Write {
+        Some(expr::parse(&mut input)?)
+    } else {
+        None
+    };
+
     let first = input.next().ok_or_else(|| {
         Error::new(
             Span::call_site(),
@@ -202,7 +211,10 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
         TokenTree::Punct(Punct::new('!', Spacing::Alone)),
         TokenTree::Group(Group::new(
             Delimiter::Brace,
-            iter::once(TokenTree::Literal(unindented_lit))
+            prefix
+                .map_or_else(TokenStream::new, Expr::into_tokens)
+                .into_iter()
+                .chain(iter::once(TokenTree::Literal(unindented_lit)))
                 .chain(input)
                 .collect(),
         )),

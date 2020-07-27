@@ -200,15 +200,15 @@ fn lit_indoc(input: TokenStream, raw: bool) -> Result<TokenStream> {
                 let v = unindent_bytes(&lit.value());
                 Lit::ByteStr(LitByteStr::new(&v, lit.span()))
             } else {
-                return Err(Error::new_spanned(
-                    lit,
+                return Err(Error::new(
+                    lit.span(),
                     "byte strings are not supported in formatting macros",
                 ));
             }
         }
         otherwise => {
-            return Err(Error::new_spanned(
-                otherwise,
+            return Err(Error::new(
+                otherwise.span(),
                 "argument must be a single string literal",
             ));
         }

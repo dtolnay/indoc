@@ -12,20 +12,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [beta, stable, 1.36.0]
-        include:
-          - name: Stable compiletest
-            rust: nightly
-          - name: Unstable compiletest
-            rust: nightly
-            features: unstable
+        rust: [nightly, beta, stable, 1.36.0]
     steps:
       - uses: actions/checkout@v2
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{matrix.rust}}
-      - run: cargo build --features "${{matrix.features}}"
-      - run: cargo test --features "${{matrix.features}}"
+      - run: cargo test
 
   msrv:
     name: Rust 1.31.0

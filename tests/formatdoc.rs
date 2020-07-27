@@ -1,4 +1,3 @@
-#![cfg_attr(feature = "unstable", feature(proc_macro_hygiene))]
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
 use indoc::formatdoc;

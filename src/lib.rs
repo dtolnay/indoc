@@ -20,8 +20,6 @@
 //! # Using Indoc
 //!
 //! ```
-#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
-#![cfg_attr(feature = "unstable", doc = "")]
 //! use indoc::indoc;
 //!
 //! fn main() {
@@ -39,8 +37,6 @@
 //! Indoc also works with raw string literals:
 //!
 //! ```
-#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
-#![cfg_attr(feature = "unstable", doc = "")]
 //! use indoc::indoc;
 //!
 //! fn main() {
@@ -58,8 +54,6 @@
 //! And byte string literals:
 //!
 //! ```
-#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
-#![cfg_attr(feature = "unstable", doc = "")]
 //! use indoc::indoc;
 //!
 //! fn main() {
@@ -79,8 +73,6 @@
 //! which prints the unindented formatted string to the standard output:
 //!
 //! ```
-#![cfg_attr(feature = "unstable", doc = " #![feature(proc_macro_hygiene)]")]
-#![cfg_attr(feature = "unstable", doc = "")]
 //! use indoc::formatdoc;
 //!
 //! fn main() {
@@ -130,7 +122,6 @@
 //!    ")            /            ")            /
 //! ```
 
-#![cfg_attr(feature = "unstable", feature(decl_macro))]
 #![cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
 #![no_std]
 

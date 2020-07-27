@@ -10,9 +10,6 @@ keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 readme = "README.md"
 edition = "2018"
 
-[features]
-unstable = []
-
 [lib]
 proc-macro = true
 

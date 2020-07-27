@@ -1,4 +1,3 @@
-#![cfg_attr(feature = "unstable", feature(proc_macro_hygiene))]
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
 use indoc::indoc;
@@ -128,7 +127,6 @@ fn trailing_whitespace() {
     assert_eq!(indoc, expected);
 }
 
-#[cfg(feature = "unstable")]
 #[test]
 fn indoc_as_format_string() {
     let s = format!(indoc!("{}"), true);

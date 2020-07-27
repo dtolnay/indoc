@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: ${{matrix.name || format('Rust {0}', matrix.rust)}}
+    name: Rust ${{matrix.rust}}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

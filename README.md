@@ -15,6 +15,8 @@ time so the leftmost non-space character is in the first column.
 indoc = "1.0"
 ```
 
+*Compiler requirement: rustc 1.45 or greater.*
+
 <br>
 
 ## Using indoc

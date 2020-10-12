@@ -43,3 +43,9 @@ fn trait_unindent_bytes() {
     let b = b"\n\t\t\tline one\n\t\t\tline two";
     assert_eq!(b.unindent(), b"line one\nline two");
 }
+
+#[test]
+fn carriage_returns() {
+    let s = "\r\n\tline one\r\n\tline two";
+    assert_eq!(unindent(s), "line one\r\nline two");
+}

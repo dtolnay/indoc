@@ -148,8 +148,13 @@ impl BytesExt for [u8] {
         fn is_newline(b: &u8) -> bool {
             *b == b'\n'
         }
+        let bytestring = if self.starts_with(b"\r\n") {
+            &self[1..]
+        } else {
+            self
+        };
         Lines {
-            split: self.split(is_newline as fn(&u8) -> bool).peekable(),
+            split: bytestring.split(is_newline as fn(&u8) -> bool).peekable(),
         }
     }
 }

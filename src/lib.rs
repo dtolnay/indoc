@@ -107,7 +107,7 @@
 //!    the first line.
 //! 4. Remove the computed number of spaces from the beginning of each line.
 
-#![allow(clippy::needless_doctest_main)]
+#![allow(clippy::needless_doctest_main, clippy::needless_pass_by_value)]
 
 mod error;
 mod expr;

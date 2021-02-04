@@ -47,6 +47,7 @@
 
 #![doc(html_root_url = "https://docs.rs/unindent/0.1.6")]
 #![allow(
+    clippy::missing_panics_doc,
     clippy::must_use_candidate,
     clippy::trivially_copy_pass_by_ref,
     clippy::type_complexity

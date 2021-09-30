@@ -1,3 +1,5 @@
+#![allow(clippy::if_same_then_else)]
+
 use indoc::writedoc;
 use std::fmt::Write as _;
 

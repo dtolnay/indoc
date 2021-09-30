@@ -1,3 +1,5 @@
+#![allow(clippy::shadow_unrelated)]
+
 use unindent::{unindent, unindent_bytes, Unindent};
 
 #[test]

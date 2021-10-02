@@ -9,6 +9,7 @@ documentation = "https://docs.rs/indoc"
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 readme = "README.md"
 edition = "2018"
+rust-version = "1.42"
 
 [lib]
 proc-macro = true

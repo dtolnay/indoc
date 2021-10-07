@@ -1,5 +1,5 @@
 error[E0277]: `NoDisplay` doesn't implement `std::fmt::Display`
- --> $DIR/printdoc-no-display.rs:6:21
+ --> $DIR/tests/ui/printdoc-no-display.rs:6:21
   |
 6 |     printdoc!("{}", NoDisplay);
   |                     ^^^^^^^^^ `NoDisplay` cannot be formatted with the default formatter

@@ -1,5 +1,5 @@
 error: unexpected end of macro invocation, expected format string
- --> $DIR/no-arguments.rs:4:5
+ --> $DIR/tests/ui/no-arguments.rs:4:5
   |
 4 |     indoc!();
   |     ^^^^^^^^^

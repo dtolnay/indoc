@@ -1,5 +1,5 @@
 error: argument must be a single string literal
- --> $DIR/tests/ui/non-lit.rs:4:12
+ --> tests/ui/non-lit.rs:4:12
   |
 4 |     indoc!(fail);
   |            ^^^^

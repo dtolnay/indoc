@@ -19,7 +19,7 @@ unindent = { version = "0.1.7", path = "unindent" }
 
 [dev-dependencies]
 rustversion = "1.0"
-trybuild = { version = "1.0.19", features = ["diff"] }
+trybuild = { version = "1.0.49", features = ["diff"] }
 
 [workspace]
 members = ["unindent"]

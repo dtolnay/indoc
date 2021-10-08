@@ -1,5 +1,5 @@
 error: argument never used
- --> $DIR/tests/ui/printdoc-extra-arg.rs:4:19
+ --> tests/ui/printdoc-extra-arg.rs:4:19
   |
 4 |     printdoc!("", 0);
   |               --  ^ argument never used

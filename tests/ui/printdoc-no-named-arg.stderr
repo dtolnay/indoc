@@ -1,7 +1,5 @@
-error: there is no argument named `named`
+error[E0425]: cannot find value `named` in this scope
  --> tests/ui/printdoc-no-named-arg.rs:4:16
   |
 4 |     printdoc!("{named}");
-  |                ^^^^^^^
-  |
-  = help: if you intended to capture `named` from the surrounding scope, add `#![feature(format_args_capture)]` to the crate attributes
+  |                ^^^^^^^ not found in this scope

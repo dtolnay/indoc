@@ -1,6 +1,6 @@
 [package]
 name = "indoc"
-version = "1.0.3"
+version = "1.0.4"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "Indented document literals"
@@ -15,7 +15,7 @@ rust-version = "1.42"
 proc-macro = true
 
 [dependencies]
-unindent = { version = "0.1.7", path = "unindent" }
+unindent = { version = "0.1.8", path = "unindent" }
 
 [dev-dependencies]
 rustversion = "1.0"

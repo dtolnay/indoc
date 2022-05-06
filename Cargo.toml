@@ -1,6 +1,6 @@
 [package]
 name = "indoc"
-version = "1.0.4"
+version = "1.0.5"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "Indented document literals"

@@ -323,7 +323,17 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
 
 fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
     let repr = token.to_string();
-    let repr = repr.trim();
+    let mut repr = repr.trim();
+
+    // https://github.com/rust-lang/rust/pull/96682
+    let invisible_delimiter_prefix = "/*«*/";
+    let invisible_delimiter_suffix = "/*»*/";
+    if repr.starts_with(invisible_delimiter_prefix) && repr.ends_with(invisible_delimiter_suffix) {
+        repr = repr
+            [invisible_delimiter_prefix.len()..repr.len() - invisible_delimiter_suffix.len()]
+            .trim();
+    }
+
     let is_string = repr.starts_with('"') || repr.starts_with('r');
     let is_byte_string = repr.starts_with("b\"") || repr.starts_with("br");
 

@@ -107,18 +107,25 @@
 //!    the first line.
 //! 4. Remove the computed number of spaces from the beginning of each line.
 
-#![allow(clippy::needless_doctest_main, clippy::needless_pass_by_value)]
+#![allow(
+    clippy::module_name_repetitions,
+    clippy::needless_doctest_main,
+    clippy::needless_pass_by_value,
+    clippy::trivially_copy_pass_by_ref,
+    clippy::type_complexity
+)]
 
 mod error;
 mod expr;
+mod unindent;
 
 use crate::error::{Error, Result};
 use crate::expr::Expr;
+use crate::unindent::unindent;
 use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 use std::iter::{self, FromIterator};
 use std::str::FromStr;
-use unindent::unindent;
 
 #[derive(Copy, Clone, PartialEq)]
 enum Macro {

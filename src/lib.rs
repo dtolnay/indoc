@@ -322,31 +322,32 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
 }
 
 fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
-    let repr = token.to_string();
-    let mut repr = repr.trim();
+    let span = token.span();
+    let mut single_token = Some(token);
 
-    // https://github.com/rust-lang/rust/pull/96682
-    let invisible_delimiter_prefix = "/*«*/";
-    let invisible_delimiter_suffix = "/*»*/";
-    if repr.starts_with(invisible_delimiter_prefix) && repr.ends_with(invisible_delimiter_suffix) {
-        repr = repr
-            [invisible_delimiter_prefix.len()..repr.len() - invisible_delimiter_suffix.len()]
-            .trim();
+    while let Some(TokenTree::Group(group)) = single_token {
+        single_token = if group.delimiter() == Delimiter::None {
+            let mut token_iter = group.stream().into_iter();
+            token_iter.next().xor(token_iter.next())
+        } else {
+            None
+        };
     }
 
+    let single_token =
+        single_token.ok_or_else(|| Error::new(span, "argument must be a single string literal"))?;
+
+    let repr = single_token.to_string();
     let is_string = repr.starts_with('"') || repr.starts_with('r');
     let is_byte_string = repr.starts_with("b\"") || repr.starts_with("br");
 
     if !is_string && !is_byte_string {
-        return Err(Error::new(
-            token.span(),
-            "argument must be a single string literal",
-        ));
+        return Err(Error::new(span, "argument must be a single string literal"));
     }
 
     if is_byte_string && mode != Macro::Indoc {
         return Err(Error::new(
-            token.span(),
+            span,
             "byte strings are not supported in formatting macros",
         ));
     }
@@ -367,7 +368,7 @@ fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
         .unwrap()
     {
         TokenTree::Literal(mut lit) => {
-            lit.set_span(token.span());
+            lit.set_span(span);
             Ok(lit)
         }
         _ => unreachable!(),

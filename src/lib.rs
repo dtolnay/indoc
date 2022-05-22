@@ -108,6 +108,7 @@
 //! 4. Remove the computed number of spaces from the beginning of each line.
 
 #![allow(
+    clippy::derive_partial_eq_without_eq,
     clippy::module_name_repetitions,
     clippy::needless_doctest_main,
     clippy::needless_pass_by_value,

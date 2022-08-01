@@ -2,6 +2,7 @@
 name = "unindent"
 version = "0.1.9" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
+categories = ["text-processing"]
 description = "Remove a column of leading whitespace from a string"
 documentation = "https://docs.rs/unindent"
 edition = "2018"

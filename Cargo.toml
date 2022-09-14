@@ -8,7 +8,6 @@ documentation = "https://docs.rs/indoc"
 edition = "2018"
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 license = "MIT OR Apache-2.0"
-readme = "README.md"
 repository = "https://github.com/dtolnay/indoc"
 rust-version = "1.42"
 

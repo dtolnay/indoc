@@ -3,7 +3,7 @@
 [<img alt="github" src="https://img.shields.io/badge/github-dtolnay/indoc-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/dtolnay/indoc)
 [<img alt="crates.io" src="https://img.shields.io/crates/v/unindent.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/unindent)
 [<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-unindent-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/unindent)
-[<img alt="build status" src="https://img.shields.io/github/workflow/status/dtolnay/indoc/CI/master?style=for-the-badge" height="20">](https://github.com/dtolnay/indoc/actions?query=branch%3Amaster)
+[<img alt="build status" src="https://img.shields.io/github/actions/workflow/status/dtolnay/indoc/ci.yml?branch=master&style=for-the-badge" height="20">](https://github.com/dtolnay/indoc/actions?query=branch%3Amaster)
 
 This crate provides [`indoc`]'s indentation logic for use with strings that are
 not statically known at compile time. For unindenting string literals, use

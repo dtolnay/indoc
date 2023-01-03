@@ -13,6 +13,7 @@ rust-version = "1.42"
 
 [lib]
 proc-macro = true
+doc-scrape-examples = false
 
 [dev-dependencies]
 rustversion = "1.0"

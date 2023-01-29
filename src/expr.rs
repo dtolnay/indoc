@@ -1,9 +1,9 @@
 use crate::error::{Error, Result};
 use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Spacing, Span, TokenStream, TokenTree};
-use std::iter;
+use std::iter::{self, Peekable};
 
-pub fn parse(input: &mut TokenIter) -> Result<TokenStream> {
+pub fn parse(input: &mut Peekable<TokenIter>, require_comma: bool) -> Result<TokenStream> {
     #[derive(PartialEq)]
     enum Lookbehind {
         JointColon,
@@ -17,13 +17,20 @@ pub fn parse(input: &mut TokenIter) -> Result<TokenStream> {
     let mut angle_bracket_depth = 0;
 
     loop {
+        if angle_bracket_depth == 0 {
+            match input.peek() {
+                Some(TokenTree::Punct(punct)) if punct.as_char() == ',' => {
+                    return Ok(expr);
+                }
+                _ => {}
+            }
+        }
         match input.next() {
             Some(TokenTree::Punct(punct)) => {
                 let ch = punct.as_char();
                 let spacing = punct.spacing();
                 expr.extend(iter::once(TokenTree::Punct(punct)));
                 lookbehind = match ch {
-                    ',' if angle_bracket_depth == 0 => return Ok(expr),
                     ':' if lookbehind == Lookbehind::JointColon => Lookbehind::DoubleColon,
                     ':' if spacing == Spacing::Joint => Lookbehind::JointColon,
                     '<' if lookbehind == Lookbehind::DoubleColon => {
@@ -40,10 +47,14 @@ pub fn parse(input: &mut TokenIter) -> Result<TokenStream> {
             }
             Some(token) => expr.extend(iter::once(token)),
             None => {
-                return Err(Error::new(
-                    Span::call_site(),
-                    "unexpected end of macro input",
-                ))
+                return if require_comma {
+                    Err(Error::new(
+                        Span::call_site(),
+                        "unexpected end of macro input",
+                    ))
+                } else {
+                    Ok(expr)
+                };
             }
         }
     }

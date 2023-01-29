@@ -109,6 +109,7 @@
 
 #![allow(
     clippy::derive_partial_eq_without_eq,
+    clippy::from_iter_instead_of_collect,
     clippy::module_name_repetitions,
     clippy::needless_doctest_main,
     clippy::needless_pass_by_value,
@@ -121,10 +122,10 @@ mod expr;
 mod unindent;
 
 use crate::error::{Error, Result};
-use crate::unindent::unindent;
+use crate::unindent::do_unindent;
 use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
-use std::iter::{self, FromIterator};
+use std::iter::{self, FromIterator, Peekable};
 use std::str::FromStr;
 
 #[derive(Copy, Clone, PartialEq)]
@@ -134,6 +135,7 @@ enum Macro {
     Print,
     Eprint,
     Write,
+    Concat,
 }
 
 /// Unindent and produce `&'static str`.
@@ -276,6 +278,42 @@ pub fn writedoc(input: TokenStream) -> TokenStream {
     expand(input, Macro::Write)
 }
 
+/// Unindent and call `concat!`.
+///
+/// Argument syntax is the same as for [`std::concat!`].
+///
+/// # Example
+///
+/// ```
+/// # use indoc::concatdoc;
+/// #
+/// # macro_rules! env {
+/// #     ($var:literal) => {
+/// #         "example"
+/// #     };
+/// # }
+/// #
+/// const HELP: &str = concatdoc! {"
+///     Usage: ", env!("CARGO_BIN_NAME"), " [options]
+///
+///     Options:
+///         -h, --help
+/// "};
+///
+/// print!("{}", HELP);
+/// ```
+///
+/// ```text
+/// Usage: example [options]
+///
+/// Options:
+///     -h, --help
+/// ```
+#[proc_macro]
+pub fn concatdoc(input: TokenStream) -> TokenStream {
+    expand(input, Macro::Concat)
+}
+
 fn expand(input: TokenStream, mode: Macro) -> TokenStream {
     match try_expand(input, mode) {
         Ok(tokens) => tokens,
@@ -284,12 +322,17 @@ fn expand(input: TokenStream, mode: Macro) -> TokenStream {
 }
 
 fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
-    let mut input = input.into_iter();
+    let mut input = input.into_iter().peekable();
 
-    let prefix = if mode == Macro::Write {
-        Some(expr::parse(&mut input)?)
-    } else {
-        None
+    let prefix = match mode {
+        Macro::Indoc | Macro::Format | Macro::Print | Macro::Eprint => None,
+        Macro::Write => {
+            let require_comma = true;
+            let mut expr = expr::parse(&mut input, require_comma)?;
+            expr.extend(iter::once(input.next().unwrap())); // add comma
+            Some(expr)
+        }
+        Macro::Concat => return do_concat(input),
     };
 
     let first = input.next().ok_or_else(|| {
@@ -299,7 +342,8 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
         )
     })?;
 
-    let unindented_lit = lit_indoc(first, mode)?;
+    let preserve_empty_first_line = false;
+    let unindented_lit = lit_indoc(first, mode, preserve_empty_first_line)?;
 
     let macro_name = match mode {
         Macro::Indoc => {
@@ -310,6 +354,7 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
         Macro::Print => "print",
         Macro::Eprint => "eprint",
         Macro::Write => "write",
+        Macro::Concat => unreachable!(),
     };
 
     // #macro_name! { #unindented_lit #args }
@@ -328,7 +373,41 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
     ]))
 }
 
-fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
+fn do_concat(mut input: Peekable<TokenIter>) -> Result<TokenStream> {
+    let mut result = TokenStream::new();
+    let mut first = true;
+
+    while input.peek().is_some() {
+        let require_comma = false;
+        let mut expr = expr::parse(&mut input, require_comma)?;
+        let mut expr_tokens = expr.clone().into_iter();
+        if let Some(token) = expr_tokens.next() {
+            if expr_tokens.next().is_none() {
+                let preserve_empty_first_line = !first;
+                if let Ok(literal) = lit_indoc(token, Macro::Concat, preserve_empty_first_line) {
+                    result.extend(iter::once(TokenTree::Literal(literal)));
+                    expr = TokenStream::new();
+                }
+            }
+        }
+        result.extend(expr);
+        if let Some(comma) = input.next() {
+            result.extend(iter::once(comma));
+        } else {
+            break;
+        }
+        first = false;
+    }
+
+    // concat! { #result }
+    Ok(TokenStream::from_iter(vec![
+        TokenTree::Ident(Ident::new("concat", Span::call_site())),
+        TokenTree::Punct(Punct::new('!', Spacing::Alone)),
+        TokenTree::Group(Group::new(Delimiter::Brace, result)),
+    ]))
+}
+
+fn lit_indoc(token: TokenTree, mode: Macro, preserve_empty_first_line: bool) -> Result<Literal> {
     let span = token.span();
     let mut single_token = Some(token);
 
@@ -352,11 +431,22 @@ fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
         return Err(Error::new(span, "argument must be a single string literal"));
     }
 
-    if is_byte_string && mode != Macro::Indoc {
-        return Err(Error::new(
-            span,
-            "byte strings are not supported in formatting macros",
-        ));
+    if is_byte_string {
+        match mode {
+            Macro::Indoc => {}
+            Macro::Format | Macro::Print | Macro::Eprint | Macro::Write => {
+                return Err(Error::new(
+                    span,
+                    "byte strings are not supported in formatting macros",
+                ));
+            }
+            Macro::Concat => {
+                return Err(Error::new(
+                    span,
+                    "byte strings are not supported in concat macro",
+                ));
+            }
+        }
     }
 
     let begin = repr.find('"').unwrap() + 1;
@@ -364,7 +454,7 @@ fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
     let repr = format!(
         "{open}{content}{close}",
         open = &repr[..begin],
-        content = unindent(&repr[begin..end]),
+        content = do_unindent(&repr[begin..end], preserve_empty_first_line),
         close = &repr[end..],
     );
 
@@ -382,7 +472,7 @@ fn lit_indoc(token: TokenTree, mode: Macro) -> Result<Literal> {
     }
 }
 
-fn require_empty_or_trailing_comma(input: &mut TokenIter) -> Result<()> {
+fn require_empty_or_trailing_comma(input: &mut Peekable<TokenIter>) -> Result<()> {
     let first = match input.next() {
         Some(TokenTree::Punct(punct)) if punct.as_char() == ',' => match input.next() {
             Some(second) => second,

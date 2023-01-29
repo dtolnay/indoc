@@ -1,17 +1,28 @@
 use std::slice::Split;
 
 pub fn unindent(s: &str) -> String {
-    let bytes = s.as_bytes();
-    let unindented = unindent_bytes(bytes);
-    String::from_utf8(unindented).unwrap()
+    let preserve_empty_first_line = false;
+    do_unindent(s, preserve_empty_first_line)
 }
 
 // Compute the maximal number of spaces that can be removed from every line, and
 // remove them.
 pub fn unindent_bytes(s: &[u8]) -> Vec<u8> {
+    let preserve_empty_first_line = false;
+    do_unindent_bytes(s, preserve_empty_first_line)
+}
+
+pub(crate) fn do_unindent(s: &str, preserve_empty_first_line: bool) -> String {
+    let bytes = s.as_bytes();
+    let unindented = do_unindent_bytes(bytes, preserve_empty_first_line);
+    String::from_utf8(unindented).unwrap()
+}
+
+fn do_unindent_bytes(s: &[u8], preserve_empty_first_line: bool) -> Vec<u8> {
     // Document may start either on the same line as opening quote or
     // on the next line
-    let ignore_first_line = s.starts_with(b"\n") || s.starts_with(b"\r\n");
+    let ignore_first_line =
+        !preserve_empty_first_line && s.starts_with(b"\n") || s.starts_with(b"\r\n");
 
     // Largest number of spaces that can be removed from every
     // non-whitespace-only line after the first

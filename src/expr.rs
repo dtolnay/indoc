@@ -11,6 +11,7 @@ pub fn parse(input: &mut TokenIter) -> Result<Expr> {
         JointColon,
         DoubleColon,
         Other,
+        JointOther,
     }
 
     let mut expr = TokenStream::new();
@@ -31,11 +32,14 @@ pub fn parse(input: &mut TokenIter) -> Result<Expr> {
                         angle_bracket_depth += 1;
                         Lookbehind::Other
                     }
-                    '>' if angle_bracket_depth > 0 => {
+                    '>' if angle_bracket_depth > 0 && lookbehind != Lookbehind::JointOther => {
                         angle_bracket_depth -= 1;
                         Lookbehind::Other
                     }
-                    _ => Lookbehind::Other,
+                    _ => match spacing {
+                        Spacing::Joint => Lookbehind::JointOther,
+                        Spacing::Alone => Lookbehind::Other,
+                    },
                 };
             }
             Some(token) => expr.extend(iter::once(token)),

@@ -1,5 +1,15 @@
 use indoc::indoc;
 
+const HELP: &str = indoc! {"
+    Usage: ./foo
+"};
+
+#[test]
+fn test_global() {
+    let expected = "Usage: ./foo\n";
+    assert_eq!(HELP, expected);
+}
+
 #[test]
 fn byte_string() {
     let indoc = indoc! {b"

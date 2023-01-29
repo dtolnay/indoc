@@ -1,6 +1,6 @@
 [package]
 name = "indoc"
-version = "1.0.8"
+version = "1.0.9"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 categories = ["rust-patterns", "text-processing", "no-std"]
 description = "Indented document literals"

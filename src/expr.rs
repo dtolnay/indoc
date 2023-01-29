@@ -3,9 +3,7 @@ use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Spacing, Span, TokenStream, TokenTree};
 use std::iter;
 
-pub struct Expr(TokenStream);
-
-pub fn parse(input: &mut TokenIter) -> Result<Expr> {
+pub fn parse(input: &mut TokenIter) -> Result<TokenStream> {
     #[derive(PartialEq)]
     enum Lookbehind {
         JointColon,
@@ -25,7 +23,7 @@ pub fn parse(input: &mut TokenIter) -> Result<Expr> {
                 let spacing = punct.spacing();
                 expr.extend(iter::once(TokenTree::Punct(punct)));
                 lookbehind = match ch {
-                    ',' if angle_bracket_depth == 0 => return Ok(Expr(expr)),
+                    ',' if angle_bracket_depth == 0 => return Ok(expr),
                     ':' if lookbehind == Lookbehind::JointColon => Lookbehind::DoubleColon,
                     ':' if spacing == Spacing::Joint => Lookbehind::JointColon,
                     '<' if lookbehind == Lookbehind::DoubleColon => {
@@ -48,11 +46,5 @@ pub fn parse(input: &mut TokenIter) -> Result<Expr> {
                 ))
             }
         }
-    }
-}
-
-impl Expr {
-    pub fn into_tokens(self) -> TokenStream {
-        self.0
     }
 }

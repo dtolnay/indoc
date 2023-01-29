@@ -121,7 +121,6 @@ mod expr;
 mod unindent;
 
 use crate::error::{Error, Result};
-use crate::expr::Expr;
 use crate::unindent::unindent;
 use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
@@ -320,7 +319,7 @@ fn try_expand(input: TokenStream, mode: Macro) -> Result<TokenStream> {
         TokenTree::Group(Group::new(
             Delimiter::Brace,
             prefix
-                .map_or_else(TokenStream::new, Expr::into_tokens)
+                .unwrap_or_else(TokenStream::new)
                 .into_iter()
                 .chain(iter::once(TokenTree::Literal(unindented_lit)))
                 .chain(input)

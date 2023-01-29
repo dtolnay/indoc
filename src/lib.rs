@@ -458,18 +458,9 @@ fn lit_indoc(token: TokenTree, mode: Macro, preserve_empty_first_line: bool) -> 
         close = &repr[end..],
     );
 
-    match TokenStream::from_str(&repr)
-        .unwrap()
-        .into_iter()
-        .next()
-        .unwrap()
-    {
-        TokenTree::Literal(mut lit) => {
-            lit.set_span(span);
-            Ok(lit)
-        }
-        _ => unreachable!(),
-    }
+    let mut lit = Literal::from_str(&repr).unwrap();
+    lit.set_span(span);
+    Ok(lit)
 }
 
 fn require_empty_or_trailing_comma(input: &mut Peekable<TokenIter>) -> Result<()> {

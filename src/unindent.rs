@@ -1,4 +1,3 @@
-use std::iter::Peekable;
 use std::slice::Split;
 
 pub fn unindent(s: &str) -> String {
@@ -90,11 +89,11 @@ fn count_spaces(line: &[u8]) -> Option<usize> {
 
 // Based on core::str::StrExt.
 trait BytesExt {
-    fn lines(&self) -> Lines;
+    fn lines(&self) -> Split<u8, fn(&u8) -> bool>;
 }
 
 impl BytesExt for [u8] {
-    fn lines(&self) -> Lines {
+    fn lines(&self) -> Split<u8, fn(&u8) -> bool> {
         fn is_newline(b: &u8) -> bool {
             *b == b'\n'
         }
@@ -103,29 +102,6 @@ impl BytesExt for [u8] {
         } else {
             self
         };
-        Lines {
-            split: bytestring.split(is_newline as fn(&u8) -> bool).peekable(),
-        }
-    }
-}
-
-struct Lines<'a> {
-    split: Peekable<Split<'a, u8, fn(&u8) -> bool>>,
-}
-
-impl<'a> Iterator for Lines<'a> {
-    type Item = &'a [u8];
-
-    fn next(&mut self) -> Option<Self::Item> {
-        match self.split.next() {
-            None => None,
-            Some(fragment) => {
-                if fragment.is_empty() && self.split.peek().is_none() {
-                    None
-                } else {
-                    Some(fragment)
-                }
-            }
-        }
+        bytestring.split(is_newline as fn(&u8) -> bool)
     }
 }

@@ -72,16 +72,30 @@
 //!
 //! # Formatting macros
 //!
-//! The indoc crate exports four additional macros to substitute conveniently
+//! The indoc crate exports five additional macros to substitute conveniently
 //! for the standard library's formatting macros:
 //!
 //! - `formatdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `format!(indoc!($fmt), ...)`
 //! - `printdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `print!(indoc!($fmt), ...)`
 //! - `eprintdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `eprint!(indoc!($fmt), ...)`
 //! - `writedoc!($dest, $fmt, ...)`&ensp;&mdash;&ensp;equivalent to `write!($dest, indoc!($fmt), ...)`
+//! - `concatdoc!(...)`&ensp;&mdash;&ensp;equivalent to `concat!(...)` with each string literal wrapped in `indoc!`
 //!
 //! ```
-//! use indoc::printdoc;
+//! # macro_rules! env {
+//! #     ($var:literal) => {
+//! #         "example"
+//! #     };
+//! # }
+//! #
+//! use indoc::{concatdoc, printdoc};
+//!
+//! const HELP: &str = concatdoc! {"
+//!     Usage: ", env!("CARGO_BIN_NAME"), " [options]
+//!
+//!     Options:
+//!         -h, --help
+//! "};
 //!
 //! fn main() {
 //!     printdoc! {"

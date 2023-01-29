@@ -12,7 +12,7 @@ time so the leftmost non-space character is in the first column.
 
 ```toml
 [dependencies]
-indoc = "1.0"
+indoc = "2"
 ```
 
 *Compiler requirement: rustc 1.56 or greater.*

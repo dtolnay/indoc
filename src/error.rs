@@ -1,5 +1,4 @@
 use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
-use std::iter::FromIterator;
 
 pub type Result<T> = std::result::Result<T, Error>;
 

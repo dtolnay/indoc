@@ -5,11 +5,11 @@ authors = ["David Tolnay <dtolnay@gmail.com>"]
 categories = ["rust-patterns", "text-processing", "no-std"]
 description = "Indented document literals"
 documentation = "https://docs.rs/indoc"
-edition = "2018"
+edition = "2021"
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/dtolnay/indoc"
-rust-version = "1.42"
+rust-version = "1.56"
 
 [lib]
 proc-macro = true

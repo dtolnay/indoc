@@ -32,17 +32,6 @@ jobs:
           toolchain: ${{matrix.rust}}
       - run: cargo test
 
-  msrv:
-    name: Rust 1.42.0
-    needs: pre_ci
-    if: needs.pre_ci.outputs.continue
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@1.42.0
-      - run: cargo check
-
   minimal:
     name: Minimal versions
     needs: pre_ci

@@ -125,7 +125,7 @@ use crate::error::{Error, Result};
 use crate::unindent::do_unindent;
 use proc_macro::token_stream::IntoIter as TokenIter;
 use proc_macro::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
-use std::iter::{self, FromIterator, Peekable};
+use std::iter::{self, Peekable};
 use std::str::FromStr;
 
 #[derive(Copy, Clone, PartialEq)]

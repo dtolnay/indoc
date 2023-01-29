@@ -42,13 +42,13 @@ fn test_angle_bracket_parsing() {
     const ZERO: usize = 0;
 
     struct Pair<A, B>(A, B);
-    impl Pair<(), ()> {
+    impl<A, B> Pair<A, B> {
         const ONE: usize = 1;
     }
 
     let mut s = String::new();
     let _ = writedoc! {
-        if ZERO < Pair::<(), ()>::ONE { &mut s } else { &mut s },
+        if ZERO < Pair::<fn() -> (), ()>::ONE { &mut s } else { &mut s },
         "writedoc",
     };
 

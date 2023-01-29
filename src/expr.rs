@@ -10,6 +10,7 @@ pub fn parse(input: &mut TokenIter) -> Result<Expr> {
     enum Lookbehind {
         JointColon,
         DoubleColon,
+        JointHyphen,
         Other,
     }
 
@@ -31,10 +32,11 @@ pub fn parse(input: &mut TokenIter) -> Result<Expr> {
                         angle_bracket_depth += 1;
                         Lookbehind::Other
                     }
-                    '>' if angle_bracket_depth > 0 => {
+                    '>' if angle_bracket_depth > 0 && lookbehind != Lookbehind::JointHyphen => {
                         angle_bracket_depth -= 1;
                         Lookbehind::Other
                     }
+                    '-' if spacing == Spacing::Joint => Lookbehind::JointHyphen,
                     _ => Lookbehind::Other,
                 };
             }

@@ -30,7 +30,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{matrix.rust}}
-      - run: cargo test
+      - run: cargo test --workspace
 
   minimal:
     name: Minimal versions

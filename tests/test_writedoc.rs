@@ -1,4 +1,4 @@
-#![allow(clippy::if_same_then_else)]
+#![allow(clippy::if_same_then_else, clippy::let_underscore_untyped)]
 
 use indoc::writedoc;
 use std::fmt::Write as _;

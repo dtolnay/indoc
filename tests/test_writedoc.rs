@@ -47,7 +47,7 @@ fn test_angle_bracket_parsing() {
     }
 
     let mut s = String::new();
-    let _ = writedoc! {
+    _ = writedoc! {
         if ZERO < Pair::<fn() -> (), ()>::ONE { &mut s } else { &mut s },
         "writedoc",
     };

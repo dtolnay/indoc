@@ -121,6 +121,7 @@
 //!    the first line.
 //! 4. Remove the computed number of spaces from the beginning of each line.
 
+#![doc(html_root_url = "https://docs.rs/indoc/2.0.0")]
 #![allow(
     clippy::derive_partial_eq_without_eq,
     clippy::from_iter_instead_of_collect,

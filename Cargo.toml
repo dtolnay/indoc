@@ -2,7 +2,7 @@
 name = "indoc"
 version = "2.0.1"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
-categories = ["rust-patterns", "text-processing", "no-std"]
+categories = ["rust-patterns", "text-processing", "no-std", "no-std::no-alloc"]
 description = "Indented document literals"
 documentation = "https://docs.rs/indoc"
 edition = "2021"

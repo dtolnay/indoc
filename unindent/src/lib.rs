@@ -50,6 +50,7 @@
     clippy::missing_panics_doc,
     clippy::module_name_repetitions,
     clippy::must_use_candidate,
+    clippy::needless_doctest_main,
     clippy::trivially_copy_pass_by_ref,
     clippy::type_complexity
 )]

@@ -22,7 +22,7 @@ fn do_unindent_bytes(s: &[u8], preserve_empty_first_line: bool) -> Vec<u8> {
     // Document may start either on the same line as opening quote or
     // on the next line
     let ignore_first_line =
-        !preserve_empty_first_line && s.starts_with(b"\n") || s.starts_with(b"\r\n");
+        !preserve_empty_first_line && (s.starts_with(b"\n") || s.starts_with(b"\r\n"));
 
     // Largest number of spaces that can be removed from every
     // non-whitespace-only line after the first

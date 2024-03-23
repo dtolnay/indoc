@@ -153,7 +153,9 @@ enum Macro {
     Concat,
 }
 
-/// Unindent and produce `&'static str`.
+/// Unindent and produce `&'static str` or `&'static [u8]`.
+///
+/// Supports normal strings, raw strings, bytestrings, and raw bytestrings.
 ///
 /// # Example
 ///

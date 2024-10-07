@@ -127,7 +127,6 @@
     clippy::from_iter_instead_of_collect,
     clippy::module_name_repetitions,
     clippy::needless_doctest_main,
-    clippy::needless_lifetimes,
     clippy::needless_pass_by_value,
     clippy::trivially_copy_pass_by_ref,
     clippy::type_complexity

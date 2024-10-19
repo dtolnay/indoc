@@ -63,13 +63,13 @@ fn one_line() {
 #[test]
 fn raw_string() {
     let indoc = formatdoc! {r#"
-        {:?}
+        {:?}"
 
             \\{}
         {}"#,
         "a", 'b', 'c'
     };
-    let expected = "\"a\"\n\n    \\\\b\nc";
+    let expected = "\"a\"\"\n\n    \\\\b\nc";
     assert_eq!(indoc, expected);
 }
 

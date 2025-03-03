@@ -45,7 +45,7 @@
 //! }
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/unindent/0.2.3")]
+#![doc(html_root_url = "https://docs.rs/unindent/0.2.4")]
 #![allow(
     clippy::missing_panics_doc,
     clippy::module_name_repetitions,

@@ -134,6 +134,7 @@
 
 mod error;
 mod expr;
+#[allow(dead_code)]
 mod unindent;
 
 use crate::error::{Error, Result};

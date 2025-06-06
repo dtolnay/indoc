@@ -1,3 +1,5 @@
+#![allow(unknown_lints, mismatched_lifetime_syntaxes)]
+
 use std::slice::Split;
 
 pub fn unindent(s: &str) -> String {

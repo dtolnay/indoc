@@ -444,24 +444,31 @@ fn lit_indoc(token: TokenTree, mode: Macro, preserve_empty_first_line: bool) -> 
     let repr = single_token.to_string();
     let is_string = repr.starts_with('"') || repr.starts_with('r');
     let is_byte_string = repr.starts_with("b\"") || repr.starts_with("br");
+    let is_c_string = repr.starts_with("c\"") || repr.starts_with("cr");
 
-    if !is_string && !is_byte_string {
+    if !is_string && !is_byte_string && !is_c_string {
         return Err(Error::new(span, "argument must be a single string literal"));
     }
 
-    if is_byte_string {
+    if let Some(restricted_kind) = if is_byte_string {
+        Some("byte strings")
+    } else if is_c_string {
+        Some("C-strings")
+    } else {
+        None
+    } {
         match mode {
             Macro::Indoc => {}
             Macro::Format | Macro::Print | Macro::Eprint | Macro::Write => {
                 return Err(Error::new(
                     span,
-                    "byte strings are not supported in formatting macros",
+                    format!("{restricted_kind} are not supported in formatting macros"),
                 ));
             }
             Macro::Concat => {
                 return Err(Error::new(
                     span,
-                    "byte strings are not supported in concat macro",
+                    format!("{restricted_kind} are not supported in concat macro"),
                 ));
             }
         }

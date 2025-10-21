@@ -1,3 +1,6 @@
+#[cfg(indoc_test_cstr)]
+mod test_cstr;
+
 use indoc::indoc;
 
 const HELP: &str = indoc! {"

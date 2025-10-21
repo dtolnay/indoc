@@ -9,15 +9,15 @@ pub struct Error {
 }
 
 impl Error {
-    pub fn new(span: Span, msg: &str) -> Self {
+    pub fn new(span: Span, msg: impl Into<String>) -> Self {
         Self::new2(span, span, msg)
     }
 
-    pub fn new2(begin: Span, end: Span, msg: &str) -> Self {
+    pub fn new2(begin: Span, end: Span, msg: impl Into<String>) -> Self {
         Error {
             begin,
             end,
-            msg: msg.to_owned(),
+            msg: msg.into(),
         }
     }
 

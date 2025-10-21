@@ -30,6 +30,18 @@ fn carriage_return() {
 }
 
 #[test]
+fn c_string() {
+    let indoc = indoc! {c"
+        a
+
+            \\b
+        c"
+    };
+    let expected = c"a\n\n    \\b\nc";
+    assert_eq!(indoc, expected);
+}
+
+#[test]
 fn empty_string() {
     let indoc = indoc! {""};
     let expected = "";
@@ -110,6 +122,18 @@ fn raw_byte_string() {
         c"#
     };
     let expected = b"\"a\"\n\n    \\\\b\nc";
+    assert_eq!(indoc, expected);
+}
+
+#[test]
+fn raw_c_string() {
+    let indoc = indoc! {cr#"
+        "a"
+
+            \\b
+        c"#
+    };
+    let expected = c"\"a\"\n\n    \\\\b\nc";
     assert_eq!(indoc, expected);
 }
 

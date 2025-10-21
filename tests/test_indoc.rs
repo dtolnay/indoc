@@ -1,3 +1,6 @@
+#[cfg(indoc_test_cstr)]
+mod test_cstr;
+
 use indoc::indoc;
 
 const HELP: &str = indoc! {"
@@ -26,18 +29,6 @@ fn carriage_return() {
         c"
     };
     let expected = "a\n\n    \\b\nc";
-    assert_eq!(indoc, expected);
-}
-
-#[test]
-fn c_string() {
-    let indoc = indoc! {c"
-        a
-
-            \\b
-        c"
-    };
-    let expected = c"a\n\n    \\b\nc";
     assert_eq!(indoc, expected);
 }
 
@@ -122,18 +113,6 @@ fn raw_byte_string() {
         c"#
     };
     let expected = b"\"a\"\n\n    \\\\b\nc";
-    assert_eq!(indoc, expected);
-}
-
-#[test]
-fn raw_c_string() {
-    let indoc = indoc! {cr#"
-        "a"
-
-            \\b
-        c"#
-    };
-    let expected = c"\"a\"\n\n    \\\\b\nc";
     assert_eq!(indoc, expected);
 }
 

@@ -6,6 +6,7 @@ categories = ["rust-patterns", "text-processing", "no-std", "no-std::no-alloc"]
 description = "Indented document literals"
 documentation = "https://docs.rs/indoc"
 edition = "2021"
+exclude = ["build.rs"]
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/dtolnay/indoc"
@@ -18,6 +19,9 @@ proc-macro = true
 rustversion = "1.0"
 trybuild = { version = "1.0.108", features = ["diff"] }
 unindent = { version = "0.2.3", path = "unindent" }
+
+[build-dependencies]
+rustversion = "1.0"
 
 [workspace]
 members = ["unindent"]

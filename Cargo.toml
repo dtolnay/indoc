@@ -10,7 +10,7 @@ exclude = ["build.rs"]
 keywords = ["heredoc", "nowdoc", "multiline", "string", "literal"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/dtolnay/indoc"
-rust-version = "1.68"
+rust-version = "1.71"
 
 [lib]
 proc-macro = true

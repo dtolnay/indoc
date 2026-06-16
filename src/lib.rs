@@ -124,7 +124,6 @@
 #![doc(html_root_url = "https://docs.rs/indoc/2.0.7")]
 #![allow(
     clippy::derive_partial_eq_without_eq,
-    clippy::from_iter_instead_of_collect,
     clippy::module_name_repetitions,
     clippy::needless_doctest_main,
     clippy::needless_pass_by_value,

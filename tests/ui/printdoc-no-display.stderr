@@ -11,5 +11,5 @@ help: the trait `std::fmt::Display` is not implemented for `NoDisplay`
   |
 3 | struct NoDisplay;
   | ^^^^^^^^^^^^^^^^
-  = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
+  = note: in format strings you may be able to use `{:?}` (or `{:#?}` for pretty-print) instead
   = note: this error originates in the macro `$crate::format_args` which comes from the expansion of the macro `printdoc` (in Nightly builds, run with -Z macro-backtrace for more info)

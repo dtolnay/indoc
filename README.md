@@ -72,7 +72,7 @@ fn main() {
 
 ## Formatting macros
 
-The indoc crate exports five additional macros to substitute conveniently for
+The indoc crate exports six additional macros to substitute conveniently for
 the standard library's formatting macros:
 
 - `formatdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `format!(indoc!($fmt), ...)`
@@ -80,6 +80,7 @@ the standard library's formatting macros:
 - `eprintdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `eprint!(indoc!($fmt), ...)`
 - `writedoc!($dest, $fmt, ...)`&ensp;&mdash;&ensp;equivalent to `write!($dest, indoc!($fmt), ...)`
 - `concatdoc!(...)`&ensp;&mdash;&ensp;equivalent to `concat!(...)` with each string literal wrapped in `indoc!`
+- `panicdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `panic!(indoc!($fmt), ...)`
 
 ```rust
 use indoc::{concatdoc, printdoc};

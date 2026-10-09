@@ -1,12 +1,14 @@
 use indoc::panicdoc;
-use std::panic;
+use std::panic::{self, UnwindSafe};
 
-fn panic_message(f: impl FnOnce() + panic::UnwindSafe) -> String {
+fn panic_message(f: impl FnOnce() + UnwindSafe) -> String {
     let payload = panic::catch_unwind(f).unwrap_err();
     if let Some(message) = payload.downcast_ref::<String>() {
         message.clone()
+    } else if let Some(message) = payload.downcast_ref::<&str>() {
+        (*message).to_owned()
     } else {
-        String::from(*payload.downcast_ref::<&str>().unwrap())
+        panic::resume_unwind(payload)
     }
 }
 
@@ -32,7 +34,8 @@ fn formatting_arguments() {
         panicdoc! {"
             {command} exited with {}
                 {output:?}",
-            1, output = "formatting failed",
+            1,
+            output = "formatting failed",
         }
     });
     assert_eq!(message, "rustfmt exited with 1\n    \"formatting failed\"");

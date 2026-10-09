@@ -343,8 +343,10 @@ pub fn concatdoc(input: TokenStream) -> TokenStream {
 /// # use indoc::panicdoc;
 /// #
 /// panicdoc! {"
-///     Unexpected output from {command}:
-///         {output}
+///     Unexpected output from `{command}`:
+///     ```
+///     {output}
+///     ```
 ///     ",
 ///     command = "rustfmt",
 ///     output = "formatting failed",

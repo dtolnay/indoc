@@ -122,7 +122,7 @@
 //!    the first line.
 //! 4. Remove the computed number of spaces from the beginning of each line.
 
-#![doc(html_root_url = "https://docs.rs/indoc/2.0.7")]
+#![doc(html_root_url = "https://docs.rs/indoc/2.0.8")]
 #![allow(
     clippy::derive_partial_eq_without_eq,
     clippy::module_name_repetitions,

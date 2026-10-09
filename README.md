@@ -75,12 +75,19 @@ fn main() {
 The indoc crate exports six additional macros to substitute conveniently for
 the standard library's formatting macros:
 
-- `formatdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `format!(indoc!($fmt), ...)`
-- `printdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `print!(indoc!($fmt), ...)`
-- `eprintdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `eprint!(indoc!($fmt), ...)`
-- `writedoc!($dest, $fmt, ...)`&ensp;&mdash;&ensp;equivalent to `write!($dest, indoc!($fmt), ...)`
-- `concatdoc!(...)`&ensp;&mdash;&ensp;equivalent to `concat!(...)` with each string literal wrapped in `indoc!`
-- `panicdoc!($fmt, ...)`&ensp;&mdash;&ensp;equivalent to `panic!(indoc!($fmt), ...)`
+- `formatdoc!($fmt, ...)` — unindent the format string and call [`format!`][std-format].
+- `printdoc!($fmt, ...)` — unindent the format string and call [`print!`][std-print].
+- `eprintdoc!($fmt, ...)` — unindent the format string and call [`eprint!`][std-eprint].
+- `writedoc!($dest, $fmt, ...)` — unindent the format string and call [`write!`][std-write].
+- `concatdoc!(...)` — unindent each string literal and call [`concat!`][std-concat].
+- `panicdoc!($fmt, ...)` — unindent the format string and call [`panic!`][std-panic].
+
+[std-format]: https://doc.rust-lang.org/std/macro.format.html
+[std-print]: https://doc.rust-lang.org/std/macro.print.html
+[std-eprint]: https://doc.rust-lang.org/std/macro.eprint.html
+[std-write]: https://doc.rust-lang.org/std/macro.write.html
+[std-concat]: https://doc.rust-lang.org/std/macro.concat.html
+[std-panic]: https://doc.rust-lang.org/std/macro.panic.html
 
 ```rust
 use indoc::{concatdoc, printdoc};
@@ -102,6 +109,25 @@ fn main() {
     }
 }
 ```
+
+### Variable capture
+
+Rust deliberately disables implicit variable capture in macro-generated format strings to avoid
+ambiguity about variable scope ([RFC 2795][format-capture-hygiene]). To unindent and format a
+string, pass formatting arguments explicitly when nesting `indoc!`, or use `formatdoc!` or
+`printdoc!` with implicit capture. Both `formatdoc!` and `printdoc!` require a string literal
+as their format string; they do not accept another macro invocation:
+
+```rust
+use indoc::{formatdoc, indoc};
+
+let name = "world";
+assert_eq!(formatdoc!("Hello {name}"), "Hello world");
+assert_eq!(format!(indoc!("Hello {name}"), name = name), "Hello world");
+```
+
+[format-capture-hygiene]:
+  https://rust-lang.github.io/rfcs/2795-format-args-implicit-identifiers.html#macro-hygiene
 
 <br>
 
